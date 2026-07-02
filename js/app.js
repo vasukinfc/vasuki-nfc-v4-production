@@ -4,7 +4,7 @@ export { db, ref, set, get, update, remove, push, runTransaction };
 export const ADMIN_KEY = 'vasuki_admin_v4_prod';
 export const CUSTOMER_KEY = 'vasuki_customer_v4_prod';
 export const ADMIN_USERNAME = 'admin';
-export const ADMIN_PASSWORD = 'admin123';
+export const ADMIN_PASSWORD = 'Vasuki@2026';
 
 export const defaultSettings = {
   brandName: 'Vasuki NFC',
