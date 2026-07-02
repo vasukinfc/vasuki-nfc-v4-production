@@ -30,7 +30,7 @@
   </div>
 
   <script type="module">
-    import { ADMIN_KEY, toast } from './js/app.js';
+    import { ADMIN_KEY, ADMIN_EMAIL, toast } from './js/app.js';
     import { auth, signInWithEmailAndPassword } from './firebase.js';
 
     login.onsubmit = async e => {
@@ -39,7 +39,7 @@
       const email = login.email.value.trim();
       const password = login.password.value;
 
-      if (email !== 'vasukinfc@gmail.com') {
+      if (email !== ADMIN_EMAIL) {
         toast('Only admin email allowed');
         return;
       }
@@ -49,8 +49,8 @@
         localStorage.setItem(ADMIN_KEY, 'yes');
         location.href = 'admin/';
       } catch (err) {
-        toast('Wrong admin login');
         console.error(err);
+        toast('Wrong Email or Password');
       }
     };
   </script>
