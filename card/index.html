@@ -1,8 +1,219 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Digital Card — Vasuki NFC</title><link rel="stylesheet" href="../css/style.css"><meta name="theme-color" content="#080b12"></head><body><div class="wrap" style="max-width:520px"><div id="app" class="phoneShell"><div class="card">Loading...</div></div></div><script type="module">
-import{db,ref,get,update,getSettings,track,phone,safeUrl,esc,expired,qrUrl,splitLines}from'../js/app.js';
-const username=new URLSearchParams(location.search).get('u')||'demo'; const app=document.getElementById('app');
-async function init(){const settings=await getSettings();const snap=await get(ref(db,'customers/'+username));if(!snap.exists()){app.innerHTML='<div class="card"><h2>Card not found</h2><p class="muted">Please check card link.</p></div>';return}const c=snap.val();if(c.status==='inactive'||expired(c.expiryDate)||c.paymentStatus==='pending'){app.innerHTML=`<div class="card"><h2>This card is expired</h2><p class="muted">Please contact ${esc(settings.brandName)} for renewal.</p><a class="btn" href="https://wa.me/${phone(settings.whatsapp)}">Renew Now</a></div>`;return}await track(username,'views');document.title=(c.name||c.businessName||'Digital Card')+' — Vasuki NFC';render(c,settings)}
-function link(url,trackField){return async e=>{if(url==='#')e.preventDefault();await track(username,trackField)}}
-function render(c,s){const theme=c.theme||s.defaultTheme||'gold';const cover=safeUrl(c.backgroundUrl);const avatar=safeUrl(c.profileUrl)||safeUrl(c.logoUrl);const products=splitLines(c.productImageUrls,10).map(u=>`<img src="${u}" onerror="this.remove()">`).join('');const services=splitLines(c.services,10).map(x=>`<div class="notice">${esc(x)}</div>`).join('');const shareUrl=location.href;app.innerHTML=`<div class="card-phone theme-${theme}"><div class="cover" ${cover?`style="background-image:url('${cover}')"`:''}></div>${avatar?`<img class="avatar" src="${avatar}" onerror="this.style.display='none'">`:`<div class="avatar avatar-text">V</div>`}<h2>${esc(c.name)}</h2><p class="muted">${esc(c.businessName)}</p>${c.about?`<p>${esc(c.about)}</p>`:''}<div class="quick"><a id="call1" href="tel:${phone(c.mobile1)}">Call</a><a id="wa" href="https://wa.me/${phone(c.whatsapp||c.mobile1)}">WhatsApp</a>${c.mapUrl?`<a id="loc" href="${safeUrl(c.mapUrl)}" target="_blank">Location</a>`:`<span>Location</span>`}${c.websiteUrl?`<a id="web" href="${safeUrl(c.websiteUrl)}" target="_blank">Website</a>`:`<span>Website</span>`}</div>${c.mobile2?`<p><a href="tel:${phone(c.mobile2)}">Second No: ${esc(c.mobile2)}</a></p>`:''}${c.email?`<p><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></p>`:''}${c.address?`<p class="muted">${esc(c.address)}</p>`:''}${services?`<h3>Services</h3><div class="grid">${services}</div>`:''}${products?`<h3>Products</h3><div class="products">${products}</div>`:''}${c.paymentQrUrl?`<h3>Payment QR</h3><img src="${safeUrl(c.paymentQrUrl)}" style="width:180px;border-radius:16px" onerror="this.remove()">`:''}<h3>Card QR</h3><img src="${qrUrl(shareUrl,180)}" style="width:180px;border-radius:16px"><div class="quick"><a id="save" href="#">Save Contact</a><a id="share" href="#">Share</a><a id="copy" href="#">Copy Link</a><a href="${safeUrl(s.website)||'#'}" target="_blank">Get Card</a></div><div class="brandFooter">Powered by <b>${esc(s.brandName)}</b> • ${esc(s.currency)}${esc(s.planPrice)}/year<br><a href="${safeUrl(s.website)||'#'}">Get Your Own NFC Card</a></div></div>`;document.getElementById('call1')?.addEventListener('click',()=>track(username,'callClicks'));document.getElementById('wa')?.addEventListener('click',()=>track(username,'whatsappClicks'));document.getElementById('loc')?.addEventListener('click',()=>track(username,'locationClicks'));document.getElementById('web')?.addEventListener('click',()=>track(username,'websiteClicks'));document.getElementById('copy').onclick=async e=>{e.preventDefault();await navigator.clipboard.writeText(shareUrl);await track(username,'copyLinkClicks');alert('Link copied')};document.getElementById('share').onclick=async e=>{e.preventDefault();await track(username,'shareClicks');if(navigator.share)navigator.share({title:document.title,url:shareUrl});else navigator.clipboard.writeText(shareUrl)};document.getElementById('save').onclick=async e=>{e.preventDefault();await track(username,'saveContactClicks');const v=`BEGIN:VCARD\nVERSION:3.0\nFN:${c.name||c.businessName}\nORG:${c.businessName||''}\nTEL:${phone(c.mobile1)}\nTEL:${phone(c.mobile2)}\nEMAIL:${c.email||''}\nURL:${c.websiteUrl||shareUrl}\nADR:${c.address||''}\nEND:VCARD`;const blob=new Blob([v],{type:'text/vcard'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=(c.name||'contact')+'.vcf';a.click()};}
-init();
-</script></body></html>
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Digital Card — Vasuki NFC</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <meta name="theme-color" content="#080b12">
+</head>
+<body>
+  <div class="wrap" style="max-width:520px">
+    <div id="app" class="phoneShell">
+      <div class="card">Loading...</div>
+    </div>
+  </div>
+
+  <script type="module">
+    import {
+      db,
+      ref,
+      get,
+      getSettings,
+      track,
+      phone,
+      safeUrl,
+      esc,
+      expired,
+      splitLines
+    } from '../js/app.js';
+
+    const username = new URLSearchParams(location.search).get('u') || 'demo';
+    const app = document.getElementById('app');
+
+    async function init() {
+      const settings = await getSettings();
+      const snap = await get(ref(db, 'customers/' + username));
+
+      if (!snap.exists()) {
+        app.innerHTML = `
+          <div class="card">
+            <h2>Card not found</h2>
+            <p class="muted">Please check card link.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const c = snap.val();
+
+      if (c.status === 'inactive' || expired(c.expiryDate) || c.paymentStatus === 'pending') {
+        app.innerHTML = `
+          <div class="card">
+            <h2>This card is expired</h2>
+            <p class="muted">Please contact ${esc(settings.brandName)} for renewal.</p>
+            <a class="btn" href="https://wa.me/${phone(settings.whatsapp)}">Renew Now</a>
+          </div>
+        `;
+        return;
+      }
+
+      await track(username, 'views');
+      document.title = (c.name || c.businessName || 'Digital Card') + ' — Vasuki NFC';
+
+      render(c, settings);
+    }
+
+    function render(c, s) {
+      const theme = c.theme || s.defaultTheme || 'gold';
+      const cover = safeUrl(c.backgroundUrl);
+      const avatar = safeUrl(c.profileUrl) || safeUrl(c.logoUrl);
+      const products = splitLines(c.productImageUrls, 10)
+        .map(u => `<img src="${u}" onerror="this.remove()">`)
+        .join('');
+
+      const services = splitLines(c.services, 10)
+        .map(x => `<div class="notice">${esc(x)}</div>`)
+        .join('');
+
+      const shareUrl = location.href;
+
+      app.innerHTML = `
+        <div class="card-phone theme-${theme}">
+          <div class="cover" ${cover ? `style="background-image:url('${cover}')"` : ''}></div>
+
+          ${
+            avatar
+              ? `<img class="avatar" src="${avatar}" onerror="this.style.display='none'">`
+              : `<div class="avatar avatar-text">V</div>`
+          }
+
+          <h2>${esc(c.name)}</h2>
+          <p class="muted">${esc(c.businessName)}</p>
+
+          ${c.about ? `<p>${esc(c.about)}</p>` : ''}
+
+          <div class="quick">
+            <a id="call1" href="tel:${phone(c.mobile1)}">Call</a>
+            <a id="wa" href="https://wa.me/${phone(c.whatsapp || c.mobile1)}">WhatsApp</a>
+
+            ${
+              c.mapUrl
+                ? `<a id="loc" href="${safeUrl(c.mapUrl)}" target="_blank">Location</a>`
+                : `<span>Location</span>`
+            }
+
+            ${
+              c.websiteUrl
+                ? `<a id="web" href="${safeUrl(c.websiteUrl)}" target="_blank">Website</a>`
+                : `<span>Website</span>`
+            }
+          </div>
+
+          ${
+            c.mobile2
+              ? `<p><a href="tel:${phone(c.mobile2)}">Second No: ${esc(c.mobile2)}</a></p>`
+              : ''
+          }
+
+          ${
+            c.email
+              ? `<p><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></p>`
+              : ''
+          }
+
+          ${c.address ? `<p class="muted">${esc(c.address)}</p>` : ''}
+
+          ${
+            services
+              ? `<h3>Services</h3><div class="grid">${services}</div>`
+              : ''
+          }
+
+          ${
+            products
+              ? `<h3>Products</h3><div class="products">${products}</div>`
+              : ''
+          }
+
+          ${
+            c.paymentQrUrl
+              ? `
+                <h3>Payment QR</h3>
+                <img src="${safeUrl(c.paymentQrUrl)}"
+                     style="width:180px;border-radius:16px"
+                     onerror="this.remove()">
+              `
+              : ''
+          }
+
+          <div class="quick">
+            <a id="save" href="#">Save Contact</a>
+            <a id="share" href="#">Share</a>
+            <a id="copy" href="#">Copy Link</a>
+            <a href="${safeUrl(s.website) || '#'}" target="_blank">Get Card</a>
+          </div>
+
+          <div class="brandFooter">
+            Powered by <b>${esc(s.brandName)}</b>
+            • ${esc(s.currency)}${esc(s.planPrice)}/year
+            <br>
+            <a href="${safeUrl(s.website) || '#'}">Get Your Own NFC Card</a>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('call1')?.addEventListener('click', () => track(username, 'callClicks'));
+      document.getElementById('wa')?.addEventListener('click', () => track(username, 'whatsappClicks'));
+      document.getElementById('loc')?.addEventListener('click', () => track(username, 'locationClicks'));
+      document.getElementById('web')?.addEventListener('click', () => track(username, 'websiteClicks'));
+
+      document.getElementById('copy').onclick = async e => {
+        e.preventDefault();
+        await navigator.clipboard.writeText(shareUrl);
+        await track(username, 'copyLinkClicks');
+        alert('Link copied');
+      };
+
+      document.getElementById('share').onclick = async e => {
+        e.preventDefault();
+        await track(username, 'shareClicks');
+
+        if (navigator.share) {
+          navigator.share({
+            title: document.title,
+            url: shareUrl
+          });
+        } else {
+          navigator.clipboard.writeText(shareUrl);
+          alert('Link copied');
+        }
+      };
+
+      document.getElementById('save').onclick = async e => {
+        e.preventDefault();
+        await track(username, 'saveContactClicks');
+
+        const vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:${c.name || c.businessName}
+ORG:${c.businessName || ''}
+TEL:${phone(c.mobile1)}
+TEL:${phone(c.mobile2)}
+EMAIL:${c.email || ''}
+URL:${c.websiteUrl || shareUrl}
+ADR:${c.address || ''}
+END:VCARD`;
+
+        const blob = new Blob([vcard], { type: 'text/vcard' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = (c.name || 'contact') + '.vcf';
+        a.click();
+      };
+    }
+
+    init();
+  </script>
+</body>
+</html>
