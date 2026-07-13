@@ -1,0 +1,24 @@
+# Environment and secrets
+.env
+.env.*
+
+# Dependencies
+node_modules/
+
+# Runtime databases and uploads
+orders.json
+users.json
+uploads/
+data/uploads/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+
+# Local development fallback data
+data/*.json

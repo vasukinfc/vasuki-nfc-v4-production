@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#111827">
+  <title>Card Analytics | VASUKI NFC</title>
+  <link rel="icon" type="image/png" href="/assets/vasuki-favicon.png">
+  <link rel="stylesheet" href="/analytics/assets/styles/analytics-dashboard.css">
+</head>
+<body>
+  <header class="analytics-header">
+    <a class="analytics-brand" href="/dashboard.html">
+      <span aria-hidden="true">V</span>
+      <strong>VASUKI NFC</strong>
+    </a>
+    <a href="/dashboard.html">Customer Dashboard</a>
+  </header>
+
+  <main class="analytics-main">
+    <section class="analytics-loading" id="analytics-loading" role="status">
+      <span aria-hidden="true"></span>
+      <p>Loading card analytics…</p>
+    </section>
+
+    <section class="analytics-error" id="analytics-error" hidden>
+      <p class="analytics-kicker">ANALYTICS</p>
+      <h1>We couldn’t load your analytics</h1>
+      <p id="analytics-error-message">Please try again.</p>
+      <button id="analytics-retry" type="button">Try again</button>
+    </section>
+
+    <div id="analytics-content" hidden>
+      <section class="analytics-hero">
+        <div>
+          <p class="analytics-kicker">CUSTOMER ANALYTICS</p>
+          <h1>Your digital card performance</h1>
+          <p>Understand how people discover and interact with your published cards.</p>
+        </div>
+        <div class="analytics-hero-actions">
+          <button id="analytics-refresh" type="button">Refresh</button>
+          <button id="export-csv" type="button">Export CSV</button>
+          <button id="export-pdf" type="button">Export PDF</button>
+        </div>
+      </section>
+
+      <section aria-labelledby="audience-title">
+        <header class="section-heading">
+          <p class="analytics-kicker">AUDIENCE</p>
+          <h2 id="audience-title">Visits and visitors</h2>
+        </header>
+        <div class="metric-grid" id="audience-metrics"></div>
+      </section>
+
+      <section class="analytics-panel" aria-labelledby="trend-title">
+        <header class="section-heading chart-heading">
+          <div>
+            <p class="analytics-kicker">VIEW TRENDS</p>
+            <h2 id="trend-title">Card views over time</h2>
+          </div>
+          <div class="period-picker" id="period-picker" aria-label="Chart period">
+            <button type="button" data-period="daily" aria-pressed="true">Daily</button>
+            <button type="button" data-period="weekly" aria-pressed="false">Weekly</button>
+            <button type="button" data-period="monthly" aria-pressed="false">Monthly</button>
+          </div>
+        </header>
+        <div class="bar-chart" id="view-chart" role="img" aria-label="Daily card views for the last 30 days"></div>
+      </section>
+
+      <div class="insight-grid">
+        <section class="analytics-panel" aria-labelledby="traffic-title">
+          <header class="section-heading">
+            <p class="analytics-kicker">DISCOVERY</p>
+            <h2 id="traffic-title">Traffic sources</h2>
+          </header>
+          <div class="breakdown-list" id="traffic-breakdown"></div>
+        </section>
+
+        <section class="analytics-panel" aria-labelledby="device-title">
+          <header class="section-heading">
+            <p class="analytics-kicker">AUDIENCE</p>
+            <h2 id="device-title">Device breakdown</h2>
+          </header>
+          <div class="breakdown-list" id="device-breakdown"></div>
+        </section>
+
+        <section class="analytics-panel" aria-labelledby="tap-title">
+          <header class="section-heading">
+            <p class="analytics-kicker">SMART ACCESS</p>
+            <h2 id="tap-title">QR vs NFC</h2>
+          </header>
+          <div class="breakdown-list" id="tap-breakdown"></div>
+        </section>
+      </div>
+
+      <section aria-labelledby="engagement-title">
+        <header class="section-heading">
+          <p class="analytics-kicker">ENGAGEMENT</p>
+          <h2 id="engagement-title">Card interactions</h2>
+        </header>
+        <div class="metric-grid metric-grid-dense" id="engagement-metrics"></div>
+      </section>
+
+      <div class="ranking-grid">
+        <section class="analytics-panel" aria-labelledby="products-title">
+          <header class="section-heading">
+            <p class="analytics-kicker">CONTENT</p>
+            <h2 id="products-title">Top products</h2>
+          </header>
+          <div class="ranking-list" id="top-products"></div>
+        </section>
+        <section class="analytics-panel" aria-labelledby="services-title">
+          <header class="section-heading">
+            <p class="analytics-kicker">CONTENT</p>
+            <h2 id="services-title">Top services</h2>
+          </header>
+          <div class="ranking-list" id="top-services"></div>
+        </section>
+        <section class="analytics-panel" aria-labelledby="social-title">
+          <header class="section-heading">
+            <p class="analytics-kicker">ENGAGEMENT</p>
+            <h2 id="social-title">Top social links</h2>
+          </header>
+          <div class="ranking-list" id="top-social"></div>
+        </section>
+        <section class="analytics-panel" aria-labelledby="cards-title">
+          <header class="section-heading">
+            <p class="analytics-kicker">PUBLISHED CARDS</p>
+            <h2 id="cards-title">Top-performing cards</h2>
+          </header>
+          <div class="ranking-list" id="top-cards"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="/analytics/assets/app.js"></script>
+</body>
+</html>

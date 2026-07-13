@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vasuki NFC Review Generator</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f0f0f;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.container{
+width:100%;
+max-width:800px;
+background:#181818;
+border:1px solid #f4c95d;
+border-radius:20px;
+padding:30px;
+text-align:center;
+box-shadow:0 0 25px rgba(244,201,93,0.2);
+}
+
+.logo{
+font-size:34px;
+font-weight:bold;
+color:#f4c95d;
+margin-bottom:10px;
+}
+
+h1{
+color:#fff;
+margin-bottom:10px;
+}
+
+.subtitle{
+color:#ccc;
+margin-bottom:20px;
+}
+
+.stars{
+font-size:32px;
+color:#f4c95d;
+margin-bottom:20px;
+}
+
+textarea{
+width:100%;
+height:180px;
+padding:15px;
+border-radius:12px;
+border:1px solid #333;
+background:#222;
+color:#fff;
+font-size:16px;
+line-height:1.6;
+resize:none;
+outline:none;
+}
+
+.buttons{
+margin-top:20px;
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+justify-content:center;
+}
+
+button{
+padding:12px 20px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+font-size:15px;
+transition:.3s;
+}
+
+button:hover{
+transform:translateY(-2px);
+}
+
+.generate{
+background:#f4c95d;
+color:#000;
+}
+
+.copy{
+background:#34A853;
+color:#fff;
+}
+
+.google{
+background:linear-gradient(
+90deg,
+#4285F4,
+#EA4335,
+#FBBC05,
+#34A853
+);
+color:#fff;
+}
+
+.footer{
+margin-top:20px;
+color:#999;
+font-size:14px;
+}
+
+.toast{
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:#34A853;
+color:#fff;
+padding:12px 20px;
+border-radius:8px;
+display:none;
+z-index:999;
+}
+
+@media(max-width:600px){
+
+.container{
+padding:20px;
+}
+
+button{
+width:100%;
+}
+
+textarea{
+height:220px;
+}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="logo">VASUKI NFC</div>
+
+<h1>Review Your Experience</h1>
+
+<p class="subtitle">
+Generate a review suggestion and edit it if needed.
+</p>
+
+<div class="stars">★★★★★</div>
+
+<textarea id="review"></textarea>
+
+<div class="buttons">
+
+<button class="generate" onclick="generateReview()">
+Generate Review
+</button>
+
+<button class="copy" onclick="copyReview()">
+Copy Review
+</button>
+
+<button class="google" onclick="openReview()">
+Leave Google Review
+</button>
+
+</div>
+
+<div class="footer">
+Powered by Vasuki NFC
+</div>
+
+</div>
+
+<div id="toast" class="toast">
+Review Copied Successfully!
+</div>
+
+<script>
+
+const GOOGLE_REVIEW_URL =
+"https://g.page/r/CesdQZ5fJyMxEBM/review";
+
+const openings = [
+"Excellent experience with",
+"Amazing service from",
+"Great experience with",
+"Highly satisfied with",
+"Outstanding support from",
+"Professional service from",
+"Fantastic experience with",
+"Wonderful experience with",
+"Reliable solution by",
+"Very impressed with"
+];
+
+const products = [
+"Vasuki NFC",
+"their NFC business card",
+"their digital business card",
+"their smart visiting card",
+"their QR business card",
+"their NFC solution"
+];
+
+const qualities = [
+"premium quality",
+"excellent design",
+"fast delivery",
+"great customer support",
+"easy setup",
+"modern technology",
+"professional finish",
+"smooth functionality",
+"high quality materials",
+"reliable performance"
+];
+
+const benefits = [
+"instant contact sharing",
+"professional networking",
+"business growth",
+"digital branding",
+"paperless networking",
+"easy lead generation",
+"modern communication",
+"quick profile sharing",
+"efficient networking",
+"smart business connections"
+];
+
+const endings = [
+"Highly recommended.",
+"Absolutely worth it.",
+"Great value for money.",
+"Perfect for professionals.",
+"Excellent experience overall.",
+"Will definitely recommend.",
+"Very satisfied with the service.",
+"Amazing product and support.",
+"Impressed with the overall quality.",
+"A must-have for business owners."
+];
+
+function randomItem(arr){
+return arr[Math.floor(Math.random()*arr.length)];
+}
+
+function generateReview(){
+
+const review =
+randomItem(openings) + " " +
+randomItem(products) + ". " +
+"The product offers " +
+randomItem(qualities) +
+" and helps with " +
+randomItem(benefits) +
+". " +
+randomItem(endings);
+
+document.getElementById("review").value = review;
+}
+
+function copyReview(){
+
+const text =
+document.getElementById("review").value;
+
+navigator.clipboard.writeText(text);
+
+const toast =
+document.getElementById("toast");
+
+toast.style.display = "block";
+
+setTimeout(()=>{
+toast.style.display = "none";
+},2000);
+}
+
+function openReview(){
+window.open(
+GOOGLE_REVIEW_URL,
+"_blank"
+);
+}
+
+window.onload = function(){
+generateReview();
+};
+
+</script>
+
+</body>
+</html>

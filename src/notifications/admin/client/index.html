@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Notification Center | VASUKI NFC</title>
+  <link rel="stylesheet" href="/admin/notifications/assets/styles/admin-notifications.css">
+</head>
+<body>
+  <header class="admin-notification-header">
+    <div>
+      <a href="/admin">← Admin CRM</a>
+      <h1>Notification Center</h1>
+    </div>
+    <div>
+      <strong id="admin-name">Administrator</strong>
+      <span id="admin-role"></span>
+    </div>
+  </header>
+
+  <main>
+    <section class="admin-notification-panel">
+      <header>
+        <div>
+          <p>ADMIN ALERTS</p>
+          <h2>Customer and subscription activity</h2>
+        </div>
+        <strong id="admin-unread-count">0 unread</strong>
+      </header>
+
+      <div class="admin-notification-toolbar">
+        <div>
+          <button class="filter active" data-filter="all" type="button">All</button>
+          <button class="filter" data-filter="unread" type="button">Unread</button>
+        </div>
+        <button id="admin-mark-all" type="button">Mark all as read</button>
+      </div>
+
+      <p id="admin-notification-message" role="status"></p>
+      <div id="admin-notification-loading">Loading notifications…</div>
+      <div id="admin-notification-empty" hidden>No notifications in this view.</div>
+      <ol id="admin-notification-list"></ol>
+    </section>
+  </main>
+
+  <script type="module" src="/admin/notifications/assets/app.js"></script>
+</body>
+</html>

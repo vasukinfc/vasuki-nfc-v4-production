@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Analytics | VASUKI NFC</title>
+  <link rel="stylesheet" href="/admin/analytics/assets/styles/admin-analytics.css">
+</head>
+<body>
+  <header class="admin-analytics-header">
+    <div>
+      <a href="/admin">← Admin CRM</a>
+      <p>VASUKI NFC</p>
+      <h1>Analytics Platform</h1>
+    </div>
+    <div>
+      <strong id="admin-name">Administrator</strong>
+      <span id="admin-role"></span>
+    </div>
+  </header>
+
+  <main class="admin-analytics-main">
+    <section class="loading-state" id="admin-loading" role="status">Loading platform analytics…</section>
+    <section class="error-state" id="admin-error" hidden>
+      <h2>Analytics unavailable</h2>
+      <p id="admin-error-message"></p>
+      <button id="admin-retry" type="button">Try again</button>
+    </section>
+
+    <div id="admin-content" hidden>
+      <form class="analytics-filters" id="analytics-filters">
+        <label>
+          Date range
+          <select id="range-preset">
+            <option value="all">All time</option>
+            <option value="7">Last 7 days</option>
+            <option value="30">Last 30 days</option>
+            <option value="90">Last 90 days</option>
+            <option value="custom">Custom range</option>
+          </select>
+        </label>
+        <label class="custom-date" hidden>
+          From
+          <input id="range-from" type="date">
+        </label>
+        <label class="custom-date" hidden>
+          To
+          <input id="range-to" type="date">
+        </label>
+        <button type="submit">Apply</button>
+        <span id="active-range">All-time insights</span>
+      </form>
+
+      <section class="overview-panel">
+        <header>
+          <div>
+            <p class="kicker">CUSTOMERS</p>
+            <h2>Customer overview</h2>
+          </div>
+          <button id="admin-refresh" type="button">Refresh</button>
+        </header>
+        <div class="overview-grid" id="customer-metrics"></div>
+      </section>
+
+      <div class="dashboard-grid">
+        <section class="analytics-panel">
+          <header>
+            <p class="kicker">REVENUE</p>
+            <h2>Paid invoice summary</h2>
+          </header>
+          <div id="revenue-summary"></div>
+          <p class="empty-state" id="revenue-empty">No paid invoices recorded.</p>
+        </section>
+
+        <section class="analytics-panel">
+          <header>
+            <p class="kicker">MONTHLY GROWTH</p>
+            <h2>Customer registrations</h2>
+          </header>
+          <div class="growth-card">
+            <strong id="growth-percent">0%</strong>
+            <span id="growth-detail">No registrations this month.</span>
+          </div>
+        </section>
+      </div>
+
+      <section class="analytics-panel">
+        <header>
+          <p class="kicker">REVENUE ANALYTICS</p>
+          <h2>Monthly paid revenue</h2>
+        </header>
+        <div class="registration-chart" id="revenue-chart" role="img" aria-label="Monthly paid revenue"></div>
+      </section>
+
+      <div class="dashboard-grid">
+        <section class="analytics-panel">
+          <header>
+            <p class="kicker">CUSTOMER GROWTH</p>
+            <h2>Daily registrations</h2>
+          </header>
+          <div class="registration-chart compact-chart" id="registration-chart" role="img" aria-label="Daily customer registrations"></div>
+        </section>
+
+        <section class="analytics-panel">
+          <header>
+            <p class="kicker">SUBSCRIPTION GROWTH</p>
+            <h2>Daily activations</h2>
+          </header>
+          <div class="registration-chart compact-chart" id="subscription-chart" role="img" aria-label="Daily subscription activations"></div>
+        </section>
+      </div>
+
+      <div class="dashboard-grid">
+        <section class="analytics-panel">
+          <header>
+            <p class="kicker">ACCOUNT HEALTH</p>
+            <h2>Active vs expired users</h2>
+          </header>
+          <div class="breakdown-list" id="status-breakdown"></div>
+        </section>
+
+        <section class="analytics-panel">
+          <header>
+            <p class="kicker">SUBSCRIPTIONS</p>
+            <h2>Plan distribution</h2>
+          </header>
+          <div class="distribution-list" id="distribution-list"></div>
+        </section>
+      </div>
+
+      <div class="ranking-dashboard-grid">
+        <section class="analytics-panel">
+          <header><p class="kicker">CUSTOMERS</p><h2>Top-performing customers</h2></header>
+          <div class="ranking-list" id="top-customers"></div>
+        </section>
+        <section class="analytics-panel">
+          <header><p class="kicker">CARDS</p><h2>Most viewed cards</h2></header>
+          <div class="ranking-list" id="most-viewed-cards"></div>
+        </section>
+        <section class="analytics-panel">
+          <header><p class="kicker">SHARING</p><h2>Most shared cards</h2></header>
+          <div class="ranking-list" id="most-shared-cards"></div>
+        </section>
+      </div>
+
+      <section class="analytics-panel">
+        <header>
+          <p class="kicker">DAILY ACTIVITY</p>
+          <h2>Activity heatmap (UTC)</h2>
+        </header>
+        <div class="heatmap-wrap">
+          <div class="activity-heatmap" id="activity-heatmap" role="img" aria-label="Activity by weekday and hour in UTC"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="/admin/analytics/assets/app.js"></script>
+</body>
+</html>

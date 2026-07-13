@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Customer Management | VASUKI NFC</title>
+  <link rel="stylesheet" href="/admin/assets/styles/admin-auth.css">
+  <link rel="stylesheet" href="/admin/assets/styles/admin-crm.css">
+</head>
+<body class="admin-shell-page">
+  <header class="admin-shell-header">
+    <div>
+      <p class="admin-auth-eyebrow">ADMIN CRM</p>
+      <h1>Customer Management</h1>
+    </div>
+    <nav class="admin-crm-nav" aria-label="Admin navigation">
+      <a href="/admin">Dashboard</a>
+      <a aria-current="page" href="/admin/customers">Customers</a>
+      <a href="/admin/orders">Orders</a>
+    </nav>
+  </header>
+
+  <main class="admin-shell-main admin-crm-layout">
+    <section class="admin-crm-panel">
+      <form class="admin-crm-filters" id="customerFilters">
+        <label>
+          Search
+          <input id="customerSearch" type="search" placeholder="Name, email, mobile, referral">
+        </label>
+        <label>
+          Status
+          <select id="customerStatus">
+            <option value="">All statuses</option>
+            <option value="active">Active</option>
+            <option value="pending">Pending</option>
+            <option value="suspended">Suspended</option>
+            <option value="archived">Archived</option>
+          </select>
+        </label>
+        <button type="submit">Apply</button>
+      </form>
+      <p id="customerMessage" class="admin-auth-message" role="status"></p>
+      <div class="admin-crm-table-wrap">
+        <table class="admin-crm-table">
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Mobile</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="customerRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="admin-crm-panel" aria-labelledby="customerDetailTitle">
+      <h2 id="customerDetailTitle">Customer details</h2>
+      <div id="customerDetail" class="admin-crm-detail" hidden></div>
+      <p id="customerEmpty">Select a customer to review details and status.</p>
+      <form id="customerForm" class="admin-crm-form" hidden>
+        <label>
+          Business / full name
+          <input id="editCustomerName" maxlength="120" required>
+        </label>
+        <label>
+          Email
+          <input id="editCustomerEmail" type="email" maxlength="254">
+        </label>
+        <label>
+          Mobile
+          <input id="editCustomerMobile" inputmode="numeric" maxlength="15" required>
+        </label>
+        <label>
+          Status
+          <select id="editCustomerStatus">
+            <option value="active">Active</option>
+            <option value="pending">Pending</option>
+            <option value="suspended">Suspended</option>
+            <option value="archived">Archived</option>
+          </select>
+        </label>
+        <label>
+          Admin notes
+          <textarea id="editCustomerNotes" maxlength="1000" rows="4"></textarea>
+        </label>
+        <div class="admin-crm-actions">
+          <button type="submit">Save customer</button>
+          <button id="archiveCustomer" type="button" class="admin-crm-danger">Archive</button>
+        </div>
+      </form>
+      <div id="customerOrders" class="admin-crm-mini-list"></div>
+    </section>
+  </main>
+
+  <script type="module" src="/admin/assets/customers.js"></script>
+</body>
+</html>

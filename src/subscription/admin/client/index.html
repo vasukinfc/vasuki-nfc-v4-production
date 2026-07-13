@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Subscription Manager | VASUKI NFC</title>
+  <link rel="stylesheet" href="/admin/subscriptions/assets/styles/admin-subscriptions.css">
+</head>
+<body>
+  <header class="subscription-admin-header">
+    <div>
+      <a href="/admin">← Admin CRM</a>
+      <p>VASUKI NFC</p>
+      <h1>Subscription Manager</h1>
+    </div>
+    <div class="subscription-admin-identity">
+      <strong id="admin-name">Administrator</strong>
+      <span id="admin-role"></span>
+    </div>
+  </header>
+
+  <main class="subscription-admin-main">
+    <section class="manager-panel" aria-labelledby="subscriptions-title">
+      <header class="manager-heading">
+        <div>
+          <p class="manager-kicker">CUSTOMERS</p>
+          <h2 id="subscriptions-title">Customer subscriptions</h2>
+        </div>
+        <span id="result-count">0 records</span>
+      </header>
+
+      <form class="manager-filters" id="filter-form">
+        <label>
+          Search customer
+          <input id="search-filter" type="search" placeholder="Name, email, mobile or customer ID">
+        </label>
+        <label>
+          Plan
+          <select id="plan-filter">
+            <option value="">All plans</option>
+            <option value="none">No plan</option>
+          </select>
+        </label>
+        <label>
+          Status
+          <select id="status-filter">
+            <option value="">All statuses</option>
+            <option value="none">No subscription</option>
+            <option value="active">Active</option>
+            <option value="grace">Grace period</option>
+            <option value="expired">Expired</option>
+            <option value="suspended">Suspended</option>
+            <option value="lifetime">Lifetime</option>
+          </select>
+        </label>
+        <button type="submit">Apply filters</button>
+      </form>
+
+      <p class="manager-message" id="manager-message" role="status"></p>
+      <div class="manager-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Plan</th>
+              <th>Status</th>
+              <th>Expiry</th>
+              <th>Access</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="subscription-rows"></tbody>
+        </table>
+      </div>
+      <div class="manager-empty" id="manager-empty" hidden>
+        No customers match these filters.
+      </div>
+    </section>
+
+    <section class="manager-panel manager-detail" id="manager-detail" hidden aria-labelledby="detail-title">
+      <header class="manager-heading">
+        <div>
+          <p class="manager-kicker">SELECTED CUSTOMER</p>
+          <h2 id="detail-title">Subscription details</h2>
+          <p id="detail-contact"></p>
+        </div>
+        <span class="status-badge" id="detail-status">No subscription</span>
+      </header>
+
+      <div class="detail-metrics">
+        <article><span>Plan</span><strong id="detail-plan">—</strong></article>
+        <article><span>Remaining</span><strong id="detail-remaining">—</strong></article>
+        <article><span>Expiry</span><strong id="detail-expiry">—</strong></article>
+        <article><span>Access</span><strong id="detail-access">Locked</strong></article>
+      </div>
+
+      <form class="admin-action-form" id="admin-action-form">
+        <h3>Manual subscription action</h3>
+        <label>
+          Action
+          <select id="action-name" required>
+            <option value="activate">Activate</option>
+            <option value="assign-plan">Assign plan</option>
+            <option value="renew">Renew</option>
+            <option value="suspend">Suspend</option>
+            <option value="restore">Restore</option>
+            <option value="expire">Expire</option>
+          </select>
+        </label>
+        <label id="action-plan-field">
+          Plan
+          <select id="action-plan" required></select>
+        </label>
+        <label class="action-note-field">
+          Audit note
+          <textarea id="action-note" rows="3" minlength="5" maxlength="300" required placeholder="Explain why this manual action is required"></textarea>
+        </label>
+        <button id="action-submit" type="submit">Apply action</button>
+        <p id="action-message" role="status"></p>
+      </form>
+
+      <div class="detail-columns">
+        <section aria-labelledby="history-title">
+          <h3 id="history-title">Subscription history</h3>
+          <div class="detail-empty" id="history-empty">No history available.</div>
+          <ol class="admin-history" id="history-list"></ol>
+        </section>
+        <section aria-labelledby="invoice-title">
+          <h3 id="invoice-title">Invoices</h3>
+          <div class="detail-empty" id="invoice-empty">No invoices available.</div>
+          <div class="admin-invoices" id="invoice-list"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/admin/subscriptions/assets/app.js"></script>
+</body>
+</html>
