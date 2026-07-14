@@ -121,13 +121,13 @@ Required manual action:
 
 ### RB-009: Legacy Supabase anon key review
 
-Status: Application hardening complete; manual Supabase RLS/policy verification still required
+Status: Resolved — application hardening complete and Supabase RLS/policies manually verified
 
 `public/index.html` contains a legacy `SUPABASE_KEY` value used by homepage review code. The key decodes as a Supabase `anon` role JWT, not a privileged `service_role` key. Supabase anon keys are designed to be browser-visible only when Row Level Security policies are correctly configured, but this repository contains no Supabase migrations, policy files, or RLS evidence for the `reviews` table.
 
 Required manual action:
 
-- Verify Supabase Row Level Security for the `reviews` table before production launch, or rotate/remove the key in a separate approved cleanup if the legacy review integration is no longer required.
+- Completed: Supabase Reviews RLS was manually executed and verified successfully.
 
 Additional confirmed hardening needs:
 
@@ -175,9 +175,9 @@ These must be completed before final production launch:
 4. Run live Razorpay order creation and payment verification in the intended production payment environment.
 5. Configure and verify production email/WhatsApp delivery credentials if external notifications are required at launch.
 6. Ensure production media storage is persistent for deployed Profile Editor/Public Card media before enabling media-dependent features.
-7. Review and approve commit/push of recovery branch `recovery/v4-production-sync`.
-8. Execute and verify Supabase `reviews` RLS/policies manually; application-side review hardening is complete.
-9. Confirm Render should deploy from the approved recovery branch only after it is pushed.
+7. Review and approve committing/pushing this report-only Supabase verification update.
+8. Create/review/merge the approved recovery branch through the normal GitHub flow before Render deployment.
+9. Configure Render to deploy only from the approved merged branch after deployment approval.
 
 ## Pre-commit cleanup status
 
@@ -215,7 +215,7 @@ Validation after removal:
 
 Remaining production dependency:
 
-- Supabase anon key remains public-anon/RLS-unverified and needs manual RLS verification or approved cleanup.
+- Supabase anon key remains public-anon and is now backed by manually verified Reviews RLS/policies.
 
 ## QA artifact status
 
@@ -230,7 +230,7 @@ Remaining production dependency:
 
 ## Review security hardening verification
 
-Status: Application-side hardening complete; manual Supabase RLS action remains production-dependent.
+Status: Resolved — application-side hardening complete and manual Supabase RLS verification passed.
 
 Verified:
 
@@ -247,4 +247,18 @@ Verified:
 
 Remaining manual action:
 
-- Execute/verify Supabase RLS policies manually before production launch.
+- Completed: Supabase RLS policies were manually executed and verified successfully.
+## Supabase Reviews RLS manual verification result
+
+Status: Resolved
+
+Verified manually by project owner:
+
+- `approved` column exists with default `false`.
+- Only two anonymous policies exist.
+- Anonymous `SELECT` is approved-only.
+- Anonymous `INSERT` is pending-only with validation.
+- Anonymous `UPDATE` and `DELETE` are denied.
+- Database constraints are active.
+
+Result: Supabase Reviews RLS is no longer a release blocker.

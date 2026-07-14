@@ -4,9 +4,9 @@ Date: 2026-07-13
 
 ## Production readiness score
 
-Updated readiness: 98%
+Updated readiness: 99%
 
-The MongoDB-backed Admin CRM is authenticated and QA-verified locally from the earlier production setup checkpoint. Razorpay Test Mode backend verification now passes against a real successful payment/order in `vasukinfc_v4.orders`, authenticated manual browser QA confirms the Customer Dashboard, Admin Order Management, safe fulfillment update, payment-field immutability, public tracking status, and refresh persistence, Admin Order Details now masks sensitive payment/order/tracking identifiers by default, the Render project configuration has been aligned for V4 staging deployment, and the recovery branch has been pushed. Readiness is 98% because the review application hardening is now complete, while actual Render dashboard values remain manual, Razorpay Live Mode remains intentionally disabled/unverified, external notification provider delivery remains production-dependent, persistent production media storage remains unresolved, and Supabase reviews RLS/policy execution remains a manual production action.
+The MongoDB-backed Admin CRM is authenticated and QA-verified locally from the earlier production setup checkpoint. Razorpay Test Mode backend verification now passes against a real successful payment/order in `vasukinfc_v4.orders`, authenticated manual browser QA confirms the Customer Dashboard, Admin Order Management, safe fulfillment update, payment-field immutability, public tracking status, and refresh persistence, Admin Order Details now masks sensitive payment/order/tracking identifiers by default, the Render project configuration has been aligned for V4 staging deployment, and the recovery branch has been pushed. Readiness is 99% because review application hardening is complete and Supabase Reviews RLS/policies have been manually verified. Remaining production dependencies are deployment/payment-provider/media/notification checks: actual Render dashboard values remain manual, Razorpay Live Mode remains intentionally disabled/unverified, external notification provider delivery remains production-dependent, and persistent production media storage remains unresolved.
 
 ## Phase 1 production setup result
 
@@ -63,7 +63,7 @@ Passed:
 - Brevo/API and SMTP variable names are documented without secret values.
 - Razorpay examples default to Test Mode placeholders; Live Mode requires explicit `rzp_live_` configuration.
 - Media storage production guard remains active: Profile Editor media features require durable storage.
-- Project-file secret scan excluding `.env` found no Razorpay, MongoDB, Brevo, private-key, or admin-session secret values. It did identify a legacy Supabase anon-key-shaped value in `public/index.html`, which requires manual Supabase RLS/rotation review.
+- Project-file secret scan excluding `.env` found no Razorpay, MongoDB, Brevo, private-key, or admin-session secret values. The Supabase anon-key-shaped value in `public/index.html` is now backed by manually verified Reviews RLS/policies.
 
 Fixed:
 
@@ -175,7 +175,7 @@ Post-deployment smoke checklist for the Render staging URL:
 
 Additional manual review:
 
-- `public/index.html` contains a legacy `SUPABASE_KEY` for homepage reviews. Confirm Supabase Row Level Security/rotation posture before production launch, or approve a separate cleanup if the review integration is no longer required.
+- `public/index.html` contains a Supabase anon key for homepage reviews; Supabase Reviews RLS/policies have now been manually verified successfully.
 
 ## Git repository recovery review
 
@@ -234,8 +234,8 @@ Recommended production action:
 
 Classification:
 
-- `NEEDS RLS/POLICY HARDENING`
-- `APPLICATION HARDENING COMPLETED; MANUAL RLS/POLICY HARDENING STILL REQUIRED`
+- `RLS/POLICY HARDENING MANUALLY VERIFIED`
+- `APPLICATION HARDENING COMPLETED; RLS/POLICY VERIFICATION PASSED`
 
 Local evidence:
 
@@ -388,9 +388,9 @@ No destructive action was taken:
 4. Run live payment verification end-to-end in the intended production environment.
 5. Verify external notification delivery providers.
 6. Confirm persistent production media storage before enabling media-dependent production features.
-7. Review and approve commit/push of `recovery/v4-production-sync`.
-8. Execute and verify Supabase `reviews` RLS/policies manually; application-side review hardening is complete.
-9. Configure Render to deploy only from the approved pushed recovery branch.
+7. Review and approve committing/pushing this report-only Supabase verification update.
+8. Create/review/merge the approved recovery branch through the normal GitHub flow before Render deployment.
+9. Configure Render to deploy only from the approved merged branch after deployment approval.
 
 ## Final note
 
@@ -398,7 +398,7 @@ No destructive action was taken:
 
 ## Reviews Security Hardening Final Verification
 
-Status: Application-side review hardening complete; Supabase RLS execution remains manual and production-dependent.
+Status: Application-side review hardening complete; Supabase RLS/policy verification passed manually.
 
 Verified changes:
 
@@ -427,7 +427,25 @@ Verification run:
 
 Manual production action still required:
 
-- Execute and verify the Supabase reviews RLS/policy plan manually in Supabase Dashboard or SQL editor before production launch.
-- Confirm anonymous `SELECT` returns only approved/published reviews and safe public columns.
-- Confirm anonymous `INSERT` cannot write moderation/admin/timestamp/ownership fields.
-- Confirm anonymous `UPDATE` and `DELETE` are denied.
+- Supabase reviews RLS/policy plan has been manually executed and verified successfully.
+- Confirmed: anonymous `SELECT` returns only approved/published reviews and safe public columns.
+- Confirmed: anonymous `INSERT` is pending-only with validation and cannot write privileged fields under the verified policy/grant posture.
+- Confirmed: anonymous `UPDATE` and `DELETE` are denied.
+## Supabase Reviews RLS Manual Verification
+
+Status: Passed by manual Supabase verification. No Supabase SQL was executed by Codex.
+
+Verified manually by project owner:
+
+- `approved` column exists with default `false`.
+- Only two anonymous policies exist for the `reviews` table.
+- Anonymous `SELECT` is approved-only.
+- Anonymous `INSERT` is pending-only and includes validation.
+- Anonymous `UPDATE` and `DELETE` are denied.
+- Database constraints are active.
+
+Result:
+
+- Supabase Reviews RLS/policy verification is no longer a release blocker.
+- Application-side review hardening remains complete.
+- The Supabase anon key remains acceptable for this public review use case only with the verified RLS posture above.

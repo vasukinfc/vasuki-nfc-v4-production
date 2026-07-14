@@ -4,10 +4,10 @@ Date: 2026-07-13
 
 ## Summary
 
-- Total final checkpoint checks: 184
-- Passed: 174
+- Total final checkpoint checks: 190
+- Passed: 182
 - Failed: 0
-- Blocked / production-dependent: 10
+- Blocked / production-dependent: 8
 - Active Admin CRM release blockers: 0
 
 ## Payment Verification QA checkpoint
@@ -246,10 +246,10 @@ Supabase findings:
 
 Classification:
 
-- Supabase key classification: public anon key, but RLS unverified.
-- RLS evidence status: no local evidence.
+- Supabase key classification: public anon key with RLS manually verified after application hardening.
+- RLS evidence status: manually verified in Supabase by project owner.
 - Safe removal status: not safe to remove without approval because the homepage review feature still uses it.
-- Recommended action: verify Supabase RLS for the `reviews` table, or approve a separate cleanup/migration to remove Supabase and replace reviews with a V4-owned API.
+- Recommended action: keep the verified RLS posture in place and avoid broad anonymous policies.
 
 ## Supabase Reviews RLS verification checkpoint
 
@@ -282,8 +282,8 @@ Security assessment:
 
 Classification:
 
-- `NEEDS RLS/POLICY HARDENING`
-- `APPLICATION HARDENING COMPLETED; MANUAL RLS/POLICY HARDENING STILL REQUIRED`
+- `RLS/POLICY HARDENING MANUALLY VERIFIED`
+- `APPLICATION HARDENING COMPLETED; RLS/POLICY VERIFICATION PASSED`
 
 Manual dashboard verification required:
 
@@ -421,7 +421,7 @@ No QA wrapper scripts, local JSON QA records, QA uploads, or QA email capture fi
 
 ## Reviews Security Hardening Final Verification
 
-Status: Application-side review hardening complete; Supabase RLS execution remains manual and production-dependent.
+Status: Application-side review hardening complete; Supabase RLS/policy verification passed manually.
 
 Verified changes:
 
@@ -450,7 +450,25 @@ Verification run:
 
 Manual production action still required:
 
-- Execute and verify the Supabase reviews RLS/policy plan manually in Supabase Dashboard or SQL editor before production launch.
-- Confirm anonymous `SELECT` returns only approved/published reviews and safe public columns.
-- Confirm anonymous `INSERT` cannot write moderation/admin/timestamp/ownership fields.
-- Confirm anonymous `UPDATE` and `DELETE` are denied.
+- Supabase reviews RLS/policy plan has been manually executed and verified successfully.
+- Confirmed: anonymous `SELECT` returns only approved/published reviews and safe public columns.
+- Confirmed: anonymous `INSERT` is pending-only with validation and cannot write privileged fields under the verified policy/grant posture.
+- Confirmed: anonymous `UPDATE` and `DELETE` are denied.
+## Supabase Reviews RLS Manual Verification
+
+Status: Passed by manual Supabase verification. No Supabase SQL was executed by Codex.
+
+Verified manually by project owner:
+
+- `approved` column exists with default `false`.
+- Only two anonymous policies exist for the `reviews` table.
+- Anonymous `SELECT` is approved-only.
+- Anonymous `INSERT` is pending-only and includes validation.
+- Anonymous `UPDATE` and `DELETE` are denied.
+- Database constraints are active.
+
+Result:
+
+- Supabase Reviews RLS/policy verification is no longer a release blocker.
+- Application-side review hardening remains complete.
+- The Supabase anon key remains acceptable for this public review use case only with the verified RLS posture above.
