@@ -1,0 +1,232 @@
+:root {
+  color-scheme: light;
+  --dark: #131921;
+  --mid: #232f3e;
+  --gold: #f3a847;
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --text: #172033;
+  --muted: #667085;
+  --border: #dfe3e8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 0;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, Arial, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+}
+
+.admin-notification-header {
+  display: flex;
+  min-height: 84px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 15px clamp(18px, 5vw, 72px);
+  background: var(--dark);
+  color: #ffffff;
+}
+
+.admin-notification-header a {
+  color: #f7c477;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.admin-notification-header h1 {
+  margin: 5px 0 0;
+  font-size: 24px;
+}
+
+.admin-notification-header > div:last-child {
+  display: grid;
+  gap: 4px;
+  text-align: right;
+}
+
+.admin-notification-header span {
+  color: #cbd3de;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+main {
+  width: min(980px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 30px 0 56px;
+}
+
+.admin-notification-panel {
+  padding: clamp(20px, 4vw, 30px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.05);
+}
+
+.admin-notification-panel > header,
+.admin-notification-toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.admin-notification-panel header p {
+  margin: 0 0 6px;
+  color: #a15c00;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.admin-notification-panel h2 {
+  margin: 0;
+}
+
+.admin-notification-panel header > strong {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fff3df;
+  color: #805008;
+  font-size: 11px;
+}
+
+.admin-notification-toolbar {
+  margin-top: 22px;
+}
+
+.admin-notification-toolbar > div {
+  display: flex;
+  gap: 6px;
+}
+
+.admin-notification-toolbar button,
+#admin-notification-list button {
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid #cfd5df;
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.admin-notification-toolbar .filter.active {
+  background: var(--mid);
+  color: #ffffff;
+}
+
+.admin-notification-toolbar button:disabled,
+#admin-notification-list button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+#admin-notification-message {
+  min-height: 20px;
+  color: #805008;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#admin-notification-loading,
+#admin-notification-empty {
+  padding: 26px;
+  color: var(--muted);
+  text-align: center;
+}
+
+#admin-notification-list {
+  display: grid;
+  gap: 11px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#admin-notification-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #e2e7ed;
+  border-left: 4px solid #2563eb;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+#admin-notification-list li[data-read="false"] {
+  background: #fffaf2;
+}
+
+#admin-notification-list li[data-severity="warning"] {
+  border-left-color: #a15c00;
+}
+
+#admin-notification-list li[data-severity="success"] {
+  border-left-color: #18794e;
+}
+
+#admin-notification-list li[data-severity="error"] {
+  border-left-color: #b42318;
+}
+
+#admin-notification-list li > div > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+#admin-notification-list li > div > div span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+#admin-notification-list p {
+  margin: 7px 0;
+  color: #475467;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+#admin-notification-list small {
+  color: var(--muted);
+}
+
+@media (max-width: 620px) {
+  .admin-notification-header > div:last-child {
+    display: none;
+  }
+
+  .admin-notification-panel > header,
+  .admin-notification-toolbar {
+    flex-direction: column;
+  }
+
+  .admin-notification-toolbar > button {
+    width: 100%;
+  }
+
+  #admin-notification-list li {
+    grid-template-columns: 1fr;
+  }
+}

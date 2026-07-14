@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin CRM | VASUKI NFC</title>
+  <link rel="stylesheet" href="/admin/assets/styles/admin-auth.css">
+  <link rel="stylesheet" href="/admin/assets/styles/admin-crm.css">
+</head>
+<body class="admin-shell-page">
+  <header class="admin-shell-header">
+    <div>
+      <p class="admin-auth-eyebrow">VASUKI NFC</p>
+      <h1>Admin CRM</h1>
+    </div>
+    <div class="admin-shell-account">
+      <div>
+        <strong id="adminDisplayName">Administrator</strong>
+        <span id="adminRole"></span>
+      </div>
+      <button class="admin-logout-button" id="adminLogoutButton" type="button">
+        Log out
+      </button>
+    </div>
+  </header>
+
+  <main class="admin-shell-main">
+    <section class="admin-shell-card" aria-labelledby="admin-title">
+      <header>
+        <p class="admin-auth-eyebrow">SECURE WORKSPACE</p>
+        <h2 id="admin-title">Welcome to the Admin CRM</h2>
+        <p id="adminIdentity">Loading administrator session…</p>
+      </header>
+      <p class="admin-shell-status">
+        Authentication is active. Customer and order management are available
+        for authorized administrators.
+      </p>
+      <a class="admin-shell-link" href="/admin/customers">
+        Open Customer Management
+      </a>
+      <a class="admin-shell-link" href="/admin/orders">
+        Open Order Management
+      </a>
+      <a class="admin-shell-link" href="/admin/subscriptions" data-platform-feature="subscriptionEngine" hidden>
+        Open Subscription Manager
+      </a>
+      <a class="admin-shell-link" href="/admin/notifications" data-platform-feature="notificationEngine" hidden>
+        Open Notification Center
+      </a>
+      <a class="admin-shell-link" href="/admin/analytics" data-platform-feature="analyticsPlatform" hidden>
+        Open Analytics Platform
+      </a>
+    </section>
+  </main>
+
+  <script type="module" src="/admin/assets/app.js"></script>
+</body>
+</html>

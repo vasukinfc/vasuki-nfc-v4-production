@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Order Management | VASUKI NFC</title>
+  <link rel="stylesheet" href="/admin/assets/styles/admin-auth.css">
+  <link rel="stylesheet" href="/admin/assets/styles/admin-crm.css">
+</head>
+<body class="admin-shell-page">
+  <header class="admin-shell-header">
+    <div>
+      <p class="admin-auth-eyebrow">ADMIN CRM</p>
+      <h1>Order Management</h1>
+    </div>
+    <nav class="admin-crm-nav" aria-label="Admin navigation">
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/customers">Customers</a>
+      <a aria-current="page" href="/admin/orders">Orders</a>
+    </nav>
+  </header>
+
+  <main class="admin-shell-main admin-crm-layout">
+    <section class="admin-crm-panel">
+      <form class="admin-crm-filters" id="orderFilters">
+        <label>
+          Search
+          <input id="orderSearch" type="search" placeholder="Order, tracking, payment, customer">
+        </label>
+        <label>
+          Order status
+          <select id="orderStatus">
+            <option value="">All statuses</option>
+          </select>
+        </label>
+        <label>
+          Payment
+          <select id="paymentStatus">
+            <option value="">All payments</option>
+            <option value="CREATED">Created</option>
+            <option value="SUCCESS">Success</option>
+            <option value="FAILED">Failed</option>
+          </select>
+        </label>
+        <button type="submit">Apply</button>
+      </form>
+      <p id="orderMessage" class="admin-auth-message" role="status"></p>
+      <div class="admin-crm-table-wrap">
+        <table class="admin-crm-table">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Customer</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Total</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="orderRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="admin-crm-panel" aria-labelledby="orderDetailTitle">
+      <h2 id="orderDetailTitle">Order details</h2>
+      <div id="orderDetail" class="admin-crm-detail" hidden></div>
+      <p id="orderEmpty">Select an order to review payment, tracking, and fulfillment status.</p>
+      <form id="orderStatusForm" class="admin-crm-form" hidden>
+        <label>
+          Fulfillment status
+          <select id="editOrderStatus"></select>
+        </label>
+        <label>
+          Admin note
+          <textarea id="orderStatusNote" maxlength="1000" rows="4"></textarea>
+        </label>
+        <button type="submit">Update status</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="/admin/assets/order-identifier-security.js"></script>
+  <script type="module" src="/admin/assets/orders.js"></script>
+</body>
+</html>

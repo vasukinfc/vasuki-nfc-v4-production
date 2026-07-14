@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#131921">
+  <title>Customer Dashboard | VASUKI NFC</title>
+  <link rel="icon" type="image/png" href="/assets/vasuki-favicon.png">
+  <link rel="stylesheet" href="/assets/customer-dashboard.css">
+</head>
+<body class="customer-dashboard">
+  <header class="dashboard-header">
+    <a class="dashboard-brand" href="/" aria-label="VASUKI NFC home">
+      <span class="dashboard-brand-mark">V</span>
+      <span>VASUKI NFC</span>
+    </a>
+
+    <nav class="dashboard-nav" aria-label="Dashboard navigation">
+      <a href="/collection.html">Collection</a>
+      <a href="/track-order.html">Track order</a>
+      <button id="logoutButton" type="button">Log out</button>
+    </nav>
+  </header>
+
+  <main class="dashboard-main">
+    <div class="dashboard-loading" id="dashboardLoading" role="status">
+      <span class="dashboard-spinner" aria-hidden="true"></span>
+      <p>Loading your dashboard…</p>
+    </div>
+
+    <section class="dashboard-error" id="dashboardError" hidden>
+      <p class="dashboard-kicker">ACCOUNT</p>
+      <h1>We couldn’t load your dashboard</h1>
+      <p id="dashboardErrorMessage">Please try again in a moment.</p>
+      <button id="retryButton" type="button">Try again</button>
+    </section>
+
+    <div class="dashboard-content" id="dashboardContent" hidden>
+      <section class="dashboard-welcome" aria-labelledby="welcomeTitle">
+        <div class="dashboard-avatar" id="customerAvatar" aria-hidden="true">V</div>
+        <div>
+          <p class="dashboard-kicker">CUSTOMER DASHBOARD</p>
+          <h1 id="welcomeTitle">Welcome back</h1>
+          <p id="customerContact">Loading account details…</p>
+        </div>
+        <a class="dashboard-primary-action" href="/collection.html">
+          Browse smart cards
+        </a>
+      </section>
+
+      <section class="dashboard-stats" aria-label="Order summary">
+        <article class="dashboard-stat-card">
+          <span>Total orders</span>
+          <strong id="totalOrders">0</strong>
+          <small>Your complete paid order history</small>
+        </article>
+        <article class="dashboard-stat-card">
+          <span>Total spent</span>
+          <strong id="totalSpent">₹0</strong>
+          <small>Across successful orders</small>
+        </article>
+        <article class="dashboard-stat-card">
+          <span>Active orders</span>
+          <strong id="activeOrders">0</strong>
+          <small>Currently being processed</small>
+        </article>
+        <article class="dashboard-stat-card">
+          <span>Latest status</span>
+          <strong class="dashboard-stat-status" id="latestStatus">—</strong>
+          <small>Your most recent order</small>
+        </article>
+      </section>
+
+      <div class="dashboard-grid">
+        <section class="dashboard-panel dashboard-orders-panel" aria-labelledby="ordersTitle">
+          <header class="dashboard-panel-header">
+            <div>
+              <p class="dashboard-kicker">ORDERS</p>
+              <h2 id="ordersTitle">My orders</h2>
+            </div>
+            <button class="dashboard-secondary-button" id="refreshButton" type="button">
+              Refresh
+            </button>
+          </header>
+
+          <div class="dashboard-orders" id="ordersList"></div>
+
+          <div class="dashboard-empty" id="ordersEmpty" hidden>
+            <div aria-hidden="true">◇</div>
+            <h3>No paid orders yet</h3>
+            <p>Your successful orders will appear here automatically.</p>
+            <a href="/collection.html">Explore the collection</a>
+          </div>
+        </section>
+
+        <aside class="dashboard-side">
+          <section class="dashboard-panel dashboard-profile-manager" aria-labelledby="profileManagerTitle" data-platform-feature="profileEditor" hidden>
+            <p class="dashboard-kicker">DIGITAL CARD</p>
+            <h2 id="profileManagerTitle">Manage your profile</h2>
+            <p>Edit your business content, media and public digital card.</p>
+            <a href="/profile-editor">Open Profile Editor</a>
+          </section>
+
+          <section class="dashboard-panel dashboard-profile-manager" aria-labelledby="notificationManagerTitle" data-platform-feature="notificationEngine" hidden>
+            <p class="dashboard-kicker">NOTIFICATIONS</p>
+            <h2 id="notificationManagerTitle">Account updates</h2>
+            <p>Review subscription reminders and important account notices.</p>
+            <a href="/notifications">Open Notification Center</a>
+          </section>
+
+          <section class="dashboard-panel dashboard-profile-manager" aria-labelledby="analyticsManagerTitle" data-platform-feature="analyticsPlatform" hidden>
+            <p class="dashboard-kicker">ANALYTICS</p>
+            <h2 id="analyticsManagerTitle">Card performance</h2>
+            <p>Review visits, visitor sources and digital card interactions.</p>
+            <a href="/analytics">Open Card Analytics</a>
+          </section>
+
+          <section class="dashboard-panel" aria-labelledby="accountTitle">
+            <header class="dashboard-panel-header">
+              <div>
+                <p class="dashboard-kicker">PROFILE</p>
+                <h2 id="accountTitle">Account</h2>
+              </div>
+            </header>
+            <dl class="dashboard-account-list">
+              <div>
+                <dt>Name</dt>
+                <dd id="accountName">—</dd>
+              </div>
+              <div>
+                <dt>Email</dt>
+                <dd id="accountEmail">—</dd>
+              </div>
+              <div>
+                <dt>Mobile</dt>
+                <dd id="accountMobile">—</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section class="dashboard-panel dashboard-referral" aria-labelledby="referralTitle">
+            <header class="dashboard-panel-header">
+              <div>
+                <p class="dashboard-kicker">REFERRAL</p>
+                <h2 id="referralTitle">Share VASUKI</h2>
+              </div>
+            </header>
+            <p>Share your personal referral code with friends and businesses.</p>
+            <div class="dashboard-referral-code">
+              <code id="referralCode">Not available</code>
+              <button id="copyReferralButton" type="button">Copy</button>
+            </div>
+            <a
+              class="dashboard-whatsapp-action"
+              id="shareReferralButton"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Share on WhatsApp
+            </a>
+            <p class="dashboard-feedback" id="referralFeedback" role="status"></p>
+          </section>
+
+          <section class="dashboard-panel dashboard-help" aria-labelledby="helpTitle">
+            <p class="dashboard-kicker">NEED HELP?</p>
+            <h2 id="helpTitle">We’re here for you</h2>
+            <p>Track an order or contact the VASUKI NFC team for assistance.</p>
+            <div>
+              <a href="/track-order.html">Track order</a>
+              <a href="/contact.html">Contact support</a>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="dashboard-footer">
+    <span>© <span id="currentYear"></span> VASUKI NFC</span>
+    <div>
+      <a href="/privacy-policy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+    </div>
+  </footer>
+
+  <script type="module" src="/assets/customer-dashboard.js"></script>
+</body>
+</html>

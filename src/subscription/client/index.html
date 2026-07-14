@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Subscription Dashboard | VASUKI NFC</title>
+  <link rel="icon" type="image/png" href="/assets/vasuki-favicon.png">
+  <link rel="stylesheet" href="/subscription/assets/styles/subscription-dashboard.css">
+</head>
+<body>
+  <header class="subscription-header">
+    <a class="subscription-brand" href="/dashboard.html" aria-label="Return to customer dashboard">
+      <span aria-hidden="true">V</span>
+      <strong>VASUKI NFC</strong>
+    </a>
+    <a href="/dashboard.html">Customer Dashboard</a>
+  </header>
+
+  <main class="subscription-main">
+    <section class="subscription-loading" id="subscription-loading" role="status">
+      <span aria-hidden="true"></span>
+      <p>Loading subscription details…</p>
+    </section>
+
+    <section class="subscription-error" id="subscription-error" hidden>
+      <p class="subscription-kicker">SUBSCRIPTION</p>
+      <h1>We couldn’t load your subscription</h1>
+      <p id="subscription-error-message">Please try again.</p>
+      <button id="subscription-retry" type="button">Try again</button>
+    </section>
+
+    <div id="subscription-content" hidden>
+      <section class="subscription-hero">
+        <div>
+          <p class="subscription-kicker">CUSTOMER SUBSCRIPTION</p>
+          <h1>Plan and access</h1>
+          <p>See your current plan, renewal timeline, invoices, and account access.</p>
+        </div>
+        <span class="subscription-badge" id="subscription-badge" data-state="none">No subscription</span>
+      </section>
+
+      <section class="current-plan-card" aria-labelledby="current-plan-title">
+        <div class="current-plan-heading">
+          <div>
+            <p class="subscription-kicker">CURRENT PLAN</p>
+            <h2 id="current-plan-title">No active plan</h2>
+          </div>
+          <p id="current-plan-summary">Choose a plan when subscriptions become available.</p>
+        </div>
+
+        <div class="subscription-metrics">
+          <article>
+            <span>Remaining days</span>
+            <strong id="remaining-days">—</strong>
+          </article>
+          <article>
+            <span>Expiry date</span>
+            <strong id="expiry-date">—</strong>
+          </article>
+          <article>
+            <span>Grace period</span>
+            <strong id="grace-status">Not active</strong>
+          </article>
+          <article>
+            <span>Renewal status</span>
+            <strong id="renewal-status">Not available</strong>
+          </article>
+          <article>
+            <span>Feature access</span>
+            <strong id="feature-access">Locked</strong>
+          </article>
+        </div>
+
+        <div class="subscription-actions">
+          <button id="upgrade-button" type="button">Upgrade plan</button>
+          <button id="renew-button" type="button">Renew plan</button>
+        </div>
+        <p class="subscription-notice" id="subscription-notice" role="status"></p>
+      </section>
+
+      <section class="subscription-section" aria-labelledby="plans-title">
+        <header>
+          <p class="subscription-kicker">PLAN COMPARISON</p>
+          <h2 id="plans-title">Available plan structures</h2>
+          <p>Prices and online payment will be connected in a later phase.</p>
+        </header>
+        <div class="plan-grid" id="plan-grid"></div>
+      </section>
+
+      <div class="subscription-detail-grid">
+        <section class="subscription-section" aria-labelledby="history-title">
+          <header>
+            <p class="subscription-kicker">HISTORY</p>
+            <h2 id="history-title">Subscription history</h2>
+          </header>
+          <div class="subscription-empty" id="history-empty">
+            No subscription activity yet.
+          </div>
+          <ol class="history-list" id="history-list"></ol>
+        </section>
+
+        <section class="subscription-section" aria-labelledby="invoices-title">
+          <header>
+            <p class="subscription-kicker">INVOICES</p>
+            <h2 id="invoices-title">Invoice list</h2>
+          </header>
+          <div class="subscription-empty" id="invoices-empty">
+            No invoices have been issued.
+          </div>
+          <div class="invoice-list" id="invoice-list"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="/subscription/assets/app.js"></script>
+</body>
+</html>

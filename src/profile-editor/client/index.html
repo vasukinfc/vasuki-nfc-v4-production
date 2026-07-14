@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Profile Editor | Vasuki</title>
+    <link rel="stylesheet" href="/profile-editor/assets/styles/editor-shell.css">
+  </head>
+  <body>
+    <header class="editor-header">
+      <div class="editor-header__inner">
+        <a class="editor-brand" href="/dashboard.html" aria-label="Return to dashboard">
+          <span class="editor-brand__mark" aria-hidden="true">V</span>
+          <span>Vasuki Profile Editor</span>
+        </a>
+        <a class="editor-header__link" href="/dashboard.html">Dashboard</a>
+      </div>
+    </header>
+
+    <main class="editor-main">
+      <section class="editor-intro" aria-labelledby="editor-title">
+        <p class="editor-eyebrow">Digital profile</p>
+        <h1 id="editor-title">Profile details</h1>
+        <p>Add the identity and contact details that will form the foundation of your digital card.</p>
+      </section>
+
+      <div id="page-message" class="page-message" role="alert" hidden></div>
+
+      <section id="loading-state" class="editor-panel loading-state" aria-live="polite">
+        <span class="loading-spinner" aria-hidden="true"></span>
+        <p>Loading your draft…</p>
+      </section>
+
+      <div id="editor-content" hidden>
+        <div class="editor-toolbar" aria-label="Editing history">
+          <div class="history-actions">
+            <button id="undo-button" class="history-button" type="button" disabled>
+              <span aria-hidden="true">↶</span>
+              Undo
+            </button>
+            <button id="redo-button" class="history-button" type="button" disabled>
+              <span aria-hidden="true">↷</span>
+              Redo
+            </button>
+          </div>
+          <p class="autosave-note">
+            <span class="autosave-note__dot" aria-hidden="true"></span>
+            Autosave is on
+          </p>
+        </div>
+
+        <section id="publication-manager" class="publication-panel" aria-labelledby="publication-heading">
+          <div class="publication-panel__status">
+            <div>
+              <p class="section-heading__step">Public card</p>
+              <h2 id="publication-heading">Publish profile</h2>
+            </div>
+            <span class="publication-badge" data-publication-badge data-status="unpublished">Unpublished</span>
+          </div>
+          <p class="publication-summary" data-publication-summary>
+            Choose your permanent card URL and publish when ready.
+          </p>
+          <div class="publication-controls">
+            <label for="publication-slug">
+              Card URL
+              <span class="publication-slug-field">
+                <span>/card/</span>
+                <input id="publication-slug" type="text" maxlength="64" inputmode="url" autocomplete="off" aria-describedby="publication-help">
+              </span>
+            </label>
+            <button id="publish-profile-button" class="save-button" type="button">Publish profile</button>
+            <a id="published-card-link" class="publication-link" href="#" target="_blank" rel="noopener noreferrer" hidden>View public card</a>
+          </div>
+          <p id="publication-help" class="publication-help">The slug becomes permanent after first publication to keep the URL working.</p>
+          <p class="publication-message" data-publication-message role="status" hidden></p>
+        </section>
+
+        <div class="editor-workspace">
+          <form id="profile-form" class="profile-form" novalidate>
+        <section class="editor-panel" aria-labelledby="identity-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-heading__step">Section 1</p>
+              <h2 id="identity-heading">Identity</h2>
+            </div>
+            <p>Tell customers who you are and what your business does.</p>
+          </div>
+
+          <div class="field-grid">
+            <div class="form-field form-field--wide">
+              <label for="businessName">Business name</label>
+              <input id="businessName" name="businessName" type="text" maxlength="100" autocomplete="organization">
+              <span class="field-error" id="businessName-error"></span>
+            </div>
+
+            <div class="form-field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" maxlength="80" autocomplete="name">
+              <span class="field-error" id="name-error"></span>
+            </div>
+
+            <div class="form-field">
+              <label for="designation">Designation</label>
+              <input id="designation" name="designation" type="text" maxlength="100" autocomplete="organization-title">
+              <span class="field-error" id="designation-error"></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="editor-panel" aria-labelledby="contact-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-heading__step">Section 2</p>
+              <h2 id="contact-heading">Contact</h2>
+            </div>
+            <p>Provide the best ways for customers to reach you.</p>
+          </div>
+
+          <div class="field-grid">
+            <div class="form-field">
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" type="tel" maxlength="24" autocomplete="tel">
+              <span class="field-error" id="phone-error"></span>
+            </div>
+
+            <div class="form-field">
+              <label for="whatsapp">WhatsApp</label>
+              <input id="whatsapp" name="whatsapp" type="tel" maxlength="24" autocomplete="tel">
+              <span class="field-error" id="whatsapp-error"></span>
+            </div>
+
+            <div class="form-field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" maxlength="254" autocomplete="email">
+              <span class="field-error" id="email-error"></span>
+            </div>
+
+            <div class="form-field">
+              <label for="website">Website</label>
+              <input id="website" name="website" type="url" maxlength="500" autocomplete="url" placeholder="https://example.com">
+              <span class="field-error" id="website-error"></span>
+            </div>
+
+            <div class="form-field form-field--wide">
+              <label for="address">Address</label>
+              <textarea id="address" name="address" maxlength="500" rows="4" autocomplete="street-address"></textarea>
+              <span class="field-error" id="address-error"></span>
+            </div>
+
+            <div class="form-field form-field--wide">
+              <label for="googleMaps">Google Maps link</label>
+              <input id="googleMaps" name="googleMaps" type="url" maxlength="500" placeholder="https://maps.google.com/…">
+              <span class="field-error" id="googleMaps-error"></span>
+            </div>
+          </div>
+        </section>
+
+        <div class="save-bar">
+          <div>
+            <p id="save-status" class="save-status" role="status" aria-live="polite">Draft loaded</p>
+            <span class="save-hint">Changes save automatically after you pause typing.</span>
+          </div>
+          <button id="save-button" class="save-button" type="submit">Save draft</button>
+        </div>
+          </form>
+
+          <aside id="live-preview" class="preview-panel" aria-labelledby="preview-heading">
+            <div class="preview-panel__heading">
+              <div>
+                <p class="section-heading__step">Live preview</p>
+                <h2 id="preview-heading">Card preview</h2>
+              </div>
+              <span class="live-badge">
+                <span aria-hidden="true"></span>
+                Live
+              </span>
+            </div>
+
+            <article class="preview-card" aria-live="polite">
+              <div class="preview-card__accent"></div>
+              <div class="preview-card__body">
+                <p class="preview-card__business" data-preview="businessName">Your business</p>
+                <h3 data-preview="name">Your name</h3>
+                <p class="preview-card__designation" data-preview="designation">Your designation</p>
+
+                <div class="preview-card__divider"></div>
+                <div class="preview-contact">
+                  <p data-preview-empty>Add contact details to see them here.</p>
+                  <a data-preview="phone" hidden></a>
+                  <a data-preview="whatsapp" target="_blank" rel="noopener noreferrer" hidden></a>
+                  <a data-preview="email" hidden></a>
+                  <a data-preview="website" target="_blank" rel="noopener noreferrer" hidden></a>
+                  <p data-preview="address" hidden></p>
+                  <a data-preview="googleMaps" target="_blank" rel="noopener noreferrer" hidden></a>
+                </div>
+                <div class="preview-content" data-preview-content></div>
+              </div>
+            </article>
+            <p class="preview-disclaimer">Preview changes remain private until you publish.</p>
+          </aside>
+        </div>
+
+        <section id="business-content-manager" class="editor-panel content-manager" aria-labelledby="business-content-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-heading__step">Phase 4D</p>
+              <h2 id="business-content-heading">Business content</h2>
+            </div>
+            <p>Add, edit and reorder profile content. Changes use the same undo, redo and autosave controls.</p>
+          </div>
+          <p class="content-reorder-note">Drag items to reorder, or use the arrow buttons on touch and keyboard devices.</p>
+          <div class="content-panels" data-content-panels></div>
+        </section>
+
+        <section id="media-manager" class="editor-panel media-manager" aria-labelledby="media-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-heading__step">Phase 4C</p>
+              <h2 id="media-heading">Media</h2>
+            </div>
+            <p>Upload and manage private media for your profile. Files remain unpublished.</p>
+          </div>
+
+          <p class="media-loading" data-media-loading role="status">Loading media…</p>
+          <p class="media-message media-message--global" data-media-global-message role="alert" hidden></p>
+          <div class="media-sections" data-media-sections></div>
+
+          <section class="video-manager" aria-labelledby="video-heading">
+            <div class="media-bucket__heading">
+              <div>
+                <h3 id="video-heading">Video URLs</h3>
+                <p>Add up to 10 secure HTTP or HTTPS video links.</p>
+              </div>
+            </div>
+
+            <form id="video-url-form" class="video-form" novalidate>
+              <input id="video-id" type="hidden">
+              <div class="form-field">
+                <label for="video-title">Video title</label>
+                <input id="video-title" type="text" maxlength="100" placeholder="Optional title">
+              </div>
+              <div class="form-field">
+                <label for="video-url">Video URL</label>
+                <input id="video-url" type="url" maxlength="500" required placeholder="https://…">
+              </div>
+              <div class="video-form__actions">
+                <button id="video-submit" class="save-button" type="submit">Add video URL</button>
+                <button id="video-cancel" class="history-button" type="button" hidden>Cancel</button>
+              </div>
+            </form>
+            <p class="media-message" data-video-message role="alert" hidden></p>
+            <div class="video-list" data-video-list></div>
+          </section>
+        </section>
+      </div>
+    </main>
+
+    <script type="module" src="/profile-editor/assets/app.js"></script>
+  </body>
+</html>

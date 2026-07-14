@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Notification Center | VASUKI NFC</title>
+  <link rel="icon" type="image/png" href="/assets/vasuki-favicon.png">
+  <link rel="stylesheet" href="/notifications/assets/styles/notification-center.css">
+</head>
+<body>
+  <header class="notification-header">
+    <a href="/dashboard.html">← Customer Dashboard</a>
+    <strong>VASUKI NFC</strong>
+  </header>
+
+  <main class="notification-main">
+    <section class="notification-hero">
+      <div>
+        <p>ACCOUNT UPDATES</p>
+        <h1>Notification Center</h1>
+        <span>Subscription updates and important account notices.</span>
+      </div>
+      <strong id="unread-badge">0 unread</strong>
+    </section>
+
+    <section class="notification-panel">
+      <div class="notification-toolbar">
+        <div role="group" aria-label="Notification filter">
+          <button class="filter-button active" data-filter="all" type="button">All</button>
+          <button class="filter-button" data-filter="unread" type="button">Unread</button>
+        </div>
+        <button id="mark-all-read" type="button">Mark all as read</button>
+      </div>
+
+      <p class="notification-message" id="notification-message" role="status"></p>
+      <div class="notification-loading" id="notification-loading">Loading notifications…</div>
+      <div class="notification-empty" id="notification-empty" hidden>
+        You have no notifications in this view.
+      </div>
+      <ol class="notification-list" id="notification-list"></ol>
+    </section>
+  </main>
+
+  <script type="module" src="/notifications/assets/app.js"></script>
+</body>
+</html>

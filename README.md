@@ -1,33 +1,57 @@
-# Vasuki NFC V4 Production
+# Vasuki NFC - Public Razorpay Ready
 
-## Upload
-Upload all files/folders inside this folder to GitHub repo root.
+This version is ready for public hosting. It includes a premium Vasuki UI and connected backend flow.
 
-## Login
-Admin Login: `admin` / `admin123`
+## Main features
 
-## Firebase
-This build uses Firebase Realtime Database only.
-Project connected: `vasuki-nfc-291d3`
+- Vasuki premium style color theme and hero look
+- Razorpay secure checkout
+- Order token after successful payment
+- Order tracking using token or mobile number
+- Customer design/logo upload
+- Email set: vasukinfc@gmail.com
+- WhatsApp order option removed
+- Collection link: /collection.html
+- Design link: /design.html
+- Mobile hover off, laptop/computer hover on
 
-## Realtime Database test rules
-For testing only:
-```json
-{
-  "rules": {
-    ".read": true,
-    ".write": true
-  }
-}
+## Public hosting
+
+Do not run this project on GitHub Pages because it requires a backend/API/Razorpay server. Deploy it on Render.
+
+Render settings:
+
+```bash
+Build Command: npm install
+Start Command: npm start
 ```
 
-## Flow
-1. Open `admin-login.html`
-2. Login with admin/admin123
-3. Add customer
-4. Open customer login
-5. Customer edits card
-6. Public card opens at `card/?u=username`
+Environment Variables:
 
-## Plan settings
-Admin > Plan Settings can change price from ₹499 to any future price.
+```text
+NODE_ENV=production
+PUBLIC_BASE_URL=https://your-render-app-name.onrender.com
+ADMIN_EMAIL=vasukinfc@gmail.com
+AUTH_SECRET=change-this-long-random-secret
+MONGODB_URI=your_mongodb_atlas_uri
+MONGODB_DB_NAME=vasukinfc_v4
+RAZORPAY_KEY_ID=rzp_test_your_key_id
+RAZORPAY_KEY_SECRET=your_test_key_secret
+TRUST_PROXY=1
+```
+
+## Razorpay connection
+
+Add Razorpay keys only in Render Environment Variables. Keep Test Mode keys for staging/QA; use Live Mode keys only during the final approved production payment launch. Do not add secret keys in HTML or GitHub.
+
+Useful files:
+
+- `server.js` - backend + Razorpay + order tracking
+- `public/index.html` - home page
+- `public/collection.html` - collection page
+- `public/design.html` - design page
+- `RAZORPAY_RENDER_SETUP.txt` - step-by-step setup
+
+## Order storage
+
+Orders are saved in MongoDB when `MONGODB_URI` is configured. JSON fallback is for local development only and must not be used for production order storage.

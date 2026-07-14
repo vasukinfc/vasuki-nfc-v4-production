@@ -1,0 +1,72 @@
+services:
+  - type: web
+    name: vasuki-nfc
+    env: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "20"
+      - key: TRUST_PROXY
+        value: "1"
+      - key: FAIL_ON_INVALID_ENV
+        value: "true"
+      - key: STRUCTURED_LOGGING_ENABLED
+        value: "true"
+      - key: LOG_LEVEL
+        value: info
+      - key: STATIC_ASSET_MAX_AGE_SECONDS
+        value: "86400"
+      - key: ADMIN_EMAIL
+        value: vasukinfc@gmail.com
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: AUTH_SECRET
+        sync: false
+      - key: ADMIN_SESSION_SECRET
+        sync: false
+      - key: ADMIN_SESSION_HOURS
+        value: "8"
+      - key: ADMIN_CRM_ENABLED
+        sync: false
+      - key: PROFILE_EDITOR_ENABLED
+        sync: false
+      - key: SUBSCRIPTION_ENGINE_ENABLED
+        sync: false
+      - key: NOTIFICATION_ENGINE_ENABLED
+        sync: false
+      - key: ANALYTICS_PLATFORM_ENABLED
+        sync: false
+      - key: ANALYTICS_HASH_SECRET
+        sync: false
+      - key: MEDIA_STORAGE_PROVIDER
+        value: local
+      - key: MEDIA_STORAGE_LOCAL_ROOT
+        sync: false
+      - key: MEDIA_STORAGE_LOCAL_PERSISTENT
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB_NAME
+        value: vasukinfc_v4
+      - key: BREVO_API_KEY
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_SECURE
+        value: "false"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false

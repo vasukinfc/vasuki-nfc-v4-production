@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Login | VASUKI NFC</title>
+  <link rel="stylesheet" href="/admin/assets/styles/admin-auth.css">
+</head>
+<body class="admin-auth-page">
+  <main class="admin-auth-layout">
+    <section class="admin-auth-card" aria-labelledby="admin-title">
+      <header class="admin-auth-header">
+        <p class="admin-auth-eyebrow">VASUKI NFC</p>
+        <h1 id="admin-title">Admin CRM</h1>
+        <p>Sign in with an authorized administrator account.</p>
+      </header>
+
+      <form class="admin-auth-form" id="adminLoginForm">
+        <div class="admin-auth-field">
+          <label for="adminEmail">Email address</label>
+          <input
+            id="adminEmail"
+            name="email"
+            type="email"
+            autocomplete="username"
+            required
+          >
+        </div>
+
+        <div class="admin-auth-field">
+          <label for="adminPassword">Password</label>
+          <input
+            id="adminPassword"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <button class="admin-auth-submit" id="adminLoginButton" type="submit">
+          Sign in
+        </button>
+        <p class="admin-auth-message" id="adminAuthMessage" role="status"></p>
+      </form>
+
+      <footer class="admin-auth-footer">
+        <span>Authorized access only</span>
+        <span aria-hidden="true">•</span>
+        <span id="adminCurrentYear"></span>
+      </footer>
+    </section>
+  </main>
+
+  <script type="module" src="/admin/assets/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Login to your VASUKI NFC account to manage checkout and orders.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login | VASUKI NFC</title>
+<link rel="canonical" href="https://vasukinfc.in/login.html">
+
+<link rel="icon" type="image/png" href="/assets/vasuki-favicon.png">
+<link rel="shortcut icon" href="/assets/favicon.ico">
+<link rel="apple-touch-icon" href="/assets/vasuki-favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  min-height:100vh;
+  font-family:Poppins,sans-serif;
+  background:linear-gradient(135deg,#131921,#232f3e);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.box{
+  width:100%;
+  max-width:420px;
+  background:#fff;
+  border-radius:18px;
+  padding:28px;
+  box-shadow:0 20px 70px rgba(0,0,0,.35);
+}
+
+.logo{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.logo h1{
+  color:#f3a847;
+  font-size:30px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+.logo p{
+  color:#565959;
+  font-size:13px;
+}
+
+.group{
+  margin-bottom:14px;
+}
+
+label{
+  display:block;
+  font-size:13px;
+  font-weight:600;
+  margin-bottom:6px;
+  color:#222;
+}
+
+input{
+  width:100%;
+  padding:13px 14px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  font-family:inherit;
+  outline:none;
+}
+
+input:focus{
+  border-color:#f3a847;
+}
+
+button{
+  width:100%;
+  border:0;
+  border-radius:10px;
+  padding:13px;
+  font-family:inherit;
+  font-weight:800;
+  cursor:pointer;
+  background:linear-gradient(135deg,#febd69,#f3a847);
+  color:#111;
+  margin-top:8px;
+}
+
+button:disabled{
+  opacity:.7;
+  cursor:not-allowed;
+}
+
+.msg{
+  margin-top:12px;
+  font-size:13px;
+  text-align:center;
+  min-height:20px;
+}
+
+.msg.ok{
+  color:#0a7a2f;
+}
+
+.msg.err{
+  color:#b12704;
+}
+
+.switch{
+  margin-top:18px;
+  font-size:13px;
+  text-align:center;
+  color:#565959;
+}
+
+.switch a{
+  color:#f3a847;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.back{
+  display:block;
+  text-align:center;
+  margin-top:12px;
+  color:#565959;
+  text-decoration:none;
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <div class="logo">
+    <h1>VASUKI NFC</h1>
+    <p>Login to your account</p>
+  </div>
+
+  <form id="loginForm">
+    <div class="group">
+      <label>Mobile Number or Email</label>
+      <input id="identity" type="text" placeholder="Mobile number or email" required>
+    </div>
+
+    <div class="group">
+      <label>Password</label>
+      <input id="password" type="password" placeholder="Minimum 6 characters" required>
+    </div>
+
+    <button id="btn" type="submit">Login</button>
+    <div id="msg" class="msg"></div>
+  </form>
+
+  <div class="switch">
+    New user? <a href="/register.html">Create account</a>
+  </div>
+
+  <a class="back" href="/">← Back to Home</a>
+</div>
+
+<script>
+const form = document.getElementById('loginForm');
+const msg = document.getElementById('msg');
+const btn = document.getElementById('btn');
+
+function showMsg(text, type){
+  msg.textContent = text;
+  msg.className = 'msg ' + type;
+}
+
+function isValidEmail(email){
+  const value = String(email || '').trim().toLowerCase();
+  return /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)+$/i.test(value) && !value.includes('..');
+}
+
+form.addEventListener('submit', async function(e){
+  e.preventDefault();
+
+  const identity = document.getElementById('identity').value.trim();
+  const password = document.getElementById('password').value;
+
+  if(!identity){
+    return showMsg('Mobile number or email is required', 'err');
+  }
+
+  if(identity.includes('@') && !isValidEmail(identity)){
+    return showMsg('Please enter a valid email address', 'err');
+  }
+
+  if(!identity.includes('@') && !/^[0-9]{10}$/.test(identity.replace(/\D/g, ''))){
+    return showMsg('Enter a valid 10 digit mobile number or email', 'err');
+  }
+
+  if(password.length < 6){
+    return showMsg('Password must be at least 6 characters', 'err');
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Logging in...';
+
+  try{
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        identity: identity,
+        password: password
+      })
+    });
+
+    const data = await res.json();
+
+    if(!res.ok){
+      throw new Error(data.error || 'Login failed');
+    }
+
+    if(!data.token){
+      throw new Error('Login token missing. Please check the backend response.');
+    }
+
+    localStorage.setItem('vasukiAuthToken', data.token);
+    localStorage.setItem('vasukiUser', JSON.stringify(data.user || {}));
+
+    showMsg('Login successful ✅', 'ok');
+
+    const back = localStorage.getItem('vasukiReturnAfterLogin');
+    localStorage.removeItem('vasukiReturnAfterLogin');
+
+    setTimeout(function(){
+      window.location.href = back || '/';
+    }, 700);
+
+  }catch(err){
+    showMsg(err.message || 'Login failed', 'err');
+    btn.disabled = false;
+    btn.textContent = 'Login';
+  }
+});
+</script>
+
+</body>
+</html>

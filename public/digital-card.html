@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0d" id="cardThemeColor">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <!-- DYNAMIC_CARD_META_START -->
+  <title>VASUKI NFC | Smart Digital Business Card</title>
+  <meta name="description" content="A premium VASUKI NFC digital business card with contact, social, QR and sharing features.">
+  <link rel="canonical" href="https://vasukinfc.in/card/vasuki-demo">
+  <link rel="manifest" href="/card/vasuki-demo/manifest.webmanifest">
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="VASUKI NFC | Smart Digital Business Card">
+  <meta property="og:description" content="Connect through a premium VASUKI NFC digital business card.">
+  <meta property="og:url" content="https://vasukinfc.in/card/vasuki-demo">
+  <meta property="og:image" content="https://vasukinfc.in/assets/hero-real-business.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VASUKI NFC | Smart Digital Business Card">
+  <meta name="twitter:description" content="Connect through a premium VASUKI NFC digital business card.">
+  <meta name="twitter:image" content="https://vasukinfc.in/assets/hero-real-business.png">
+  <script type="application/ld+json" id="cardStructuredData">{"@context":"https://schema.org","@type":"Person","name":"VASUKI NFC","url":"https://vasukinfc.in/card/vasuki-demo"}</script>
+  <!-- DYNAMIC_CARD_META_END -->
+  <link rel="icon" type="image/png" href="/assets/vasuki-favicon.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <link rel="stylesheet" href="/assets/digital-card.css">
+</head>
+<body
+  class="digital-card-page"
+  data-card-slug=""
+  data-analytics-enabled="false"
+  data-theme="luxury"
+  data-template="obsidian-gold"
+>
+  <a class="digital-card-skip" href="#digitalCard">Skip to digital card</a>
+
+  <header class="digital-card-toolbar">
+    <a class="digital-card-brand" href="/" aria-label="VASUKI NFC home">
+      <img src="/assets/vasuki-favicon.png" alt="" width="30" height="30">
+      <span>VASUKI NFC</span>
+    </a>
+    <div>
+      <button id="installCardButton" type="button" hidden>Install</button>
+      <button id="toolbarShareButton" type="button">Share</button>
+    </div>
+  </header>
+
+  <main class="digital-card-layout">
+    <div class="digital-card-state" id="cardLoading" role="status">
+      <span class="digital-card-loader" aria-hidden="true"></span>
+      <p>Opening digital card…</p>
+    </div>
+
+    <section class="digital-card-error" id="cardError" hidden>
+      <p class="digital-card-overline">VASUKI NFC</p>
+      <h2>Card unavailable</h2>
+      <p id="cardErrorMessage">This digital card could not be loaded.</p>
+      <button id="cardRetryButton" type="button">Try again</button>
+      <a href="/">Visit VASUKI NFC</a>
+    </section>
+
+    <article class="digital-card" id="digitalCard" hidden>
+      <div class="digital-card-cover" aria-hidden="true">
+        <span class="digital-card-cover-orb digital-card-cover-orb-one"></span>
+        <span class="digital-card-cover-orb digital-card-cover-orb-two"></span>
+        <span class="digital-card-template-name" id="templateName">Obsidian Gold</span>
+      </div>
+
+      <div class="digital-card-profile">
+        <div class="digital-card-avatar" id="cardAvatar" aria-hidden="true">
+          <img id="cardLogo" alt="" hidden>
+          <span id="cardInitials">VN</span>
+        </div>
+
+        <div class="digital-card-identity">
+          <p class="digital-card-overline" id="cardCompany">VASUKI NFC</p>
+          <h1 id="cardName">VASUKI NFC</h1>
+          <p class="digital-card-role" id="cardTitle">Smart Business Card Specialist</p>
+          <p class="digital-card-tagline" id="cardTagline">One tap. One smart identity.</p>
+          <p class="digital-card-bio" id="cardBio"></p>
+        </div>
+
+        <div class="digital-card-quick-actions" aria-label="Primary contact actions">
+          <a id="callAction" href="#" aria-label="Call">
+            <span aria-hidden="true">☎</span>
+            <span>Call</span>
+          </a>
+          <a id="whatsappAction" href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <span aria-hidden="true">◉</span>
+            <span>WhatsApp</span>
+          </a>
+          <a id="emailAction" href="#" aria-label="Email">
+            <span aria-hidden="true">✉</span>
+            <span>Email</span>
+          </a>
+        </div>
+
+        <div class="digital-card-primary-actions">
+          <button id="saveContactButton" type="button">
+            <span aria-hidden="true">＋</span>
+            Save contact
+          </button>
+          <button id="shareCardButton" type="button">
+            <span aria-hidden="true">↗</span>
+            Share card
+          </button>
+        </div>
+
+        <section class="digital-card-section" id="servicesSection" aria-labelledby="servicesTitle">
+          <div class="digital-card-section-heading">
+            <p class="digital-card-overline">EXPERTISE</p>
+            <h2 id="servicesTitle">Services</h2>
+          </div>
+          <ul class="digital-card-services" id="cardServices"></ul>
+        </section>
+
+        <section class="digital-card-section" id="productsSection" aria-labelledby="productsTitle" hidden>
+          <div class="digital-card-section-heading">
+            <p class="digital-card-overline">PRODUCTS</p>
+            <h2 id="productsTitle">Products</h2>
+          </div>
+          <div class="digital-card-content-grid" id="cardProducts"></div>
+        </section>
+
+        <section class="digital-card-section" id="businessHoursSection" aria-labelledby="businessHoursTitle" hidden>
+          <div class="digital-card-section-heading">
+            <p class="digital-card-overline">OPENING TIMES</p>
+            <h2 id="businessHoursTitle">Business hours</h2>
+          </div>
+          <dl class="digital-card-hours" id="cardBusinessHours"></dl>
+        </section>
+
+        <section class="digital-card-section" id="gallerySection" aria-labelledby="galleryTitle" hidden>
+          <div class="digital-card-section-heading">
+            <p class="digital-card-overline">GALLERY</p>
+            <h2 id="galleryTitle">Gallery</h2>
+          </div>
+          <div class="digital-card-gallery" id="cardGallery"></div>
+        </section>
+
+        <section class="digital-card-section" id="teamSection" aria-labelledby="teamTitle" hidden>
+          <div class="digital-card-section-heading">
+            <p class="digital-card-overline">TEAM</p>
+            <h2 id="teamTitle">Meet the team</h2>
+          </div>
+          <div class="digital-card-content-grid" id="cardTeam"></div>
+        </section>
+
+        <section class="digital-card-section" aria-labelledby="contactTitle">
+          <div class="digital-card-section-heading">
+            <p class="digital-card-overline">CONNECT</p>
+            <h2 id="contactTitle">Contact details</h2>
+          </div>
+          <div class="digital-card-contact-list">
+            <a id="phoneDetail" href="#">
+              <span class="digital-card-contact-icon" aria-hidden="true">☎</span>
+              <span><small>Mobile</small><strong id="cardPhone"></strong></span>
+            </a>
+            <a id="emailDetail" href="#">
+              <span class="digital-card-contact-icon" aria-hidden="true">✉</span>
+              <span><small>Email</small><strong id="cardEmail"></strong></span>
+            </a>
+            <a id="websiteDetail" href="#" target="_blank" rel="noopener noreferrer">
+              <span class="digital-card-contact-icon" aria-hidden="true">⌁</span>
+              <span><small>Website</small><strong id="cardWebsite"></strong></span>
+            </a>
+            <a id="locationDetail" href="#" target="_blank" rel="noopener noreferrer">
+              <span class="digital-card-contact-icon" aria-hidden="true">⌖</span>
+              <span><small>Location</small><strong id="cardAddress"></strong></span>
+            </a>
+          </div>
+        </section>
+
+        <section class="digital-card-section" id="socialSection" aria-labelledby="socialTitle">
+          <div class="digital-card-section-heading">
+            <p class="digital-card-overline">SOCIAL</p>
+            <h2 id="socialTitle">Find me online</h2>
+          </div>
+          <div class="digital-card-socials" id="cardSocials"></div>
+        </section>
+
+        <section class="digital-card-section" id="customButtonsSection" aria-labelledby="customButtonsTitle" hidden>
+          <div class="digital-card-section-heading">
+            <p class="digital-card-overline">QUICK LINKS</p>
+            <h2 id="customButtonsTitle">More links</h2>
+          </div>
+          <div class="digital-card-custom-buttons" id="cardCustomButtons"></div>
+        </section>
+
+        <section class="digital-card-section" id="paymentSection" aria-labelledby="paymentTitle" hidden>
+          <div class="digital-card-section-heading">
+            <p class="digital-card-overline">PAYMENT</p>
+            <h2 id="paymentTitle">Payment QR</h2>
+          </div>
+          <img class="digital-card-payment-qr" id="cardPaymentQr" alt="Payment QR code" loading="lazy">
+        </section>
+
+        <section class="digital-card-section" id="catalogSection" aria-labelledby="catalogTitle" hidden>
+          <div class="digital-card-section-heading">
+            <p class="digital-card-overline">CATALOG</p>
+            <h2 id="catalogTitle">PDF catalog</h2>
+          </div>
+          <a class="digital-card-resource-link" id="cardCatalogLink" href="#" target="_blank" rel="noopener noreferrer">Open PDF catalog</a>
+        </section>
+
+        <section class="digital-card-section" id="videosSection" aria-labelledby="videosTitle" hidden>
+          <div class="digital-card-section-heading">
+            <p class="digital-card-overline">VIDEOS</p>
+            <h2 id="videosTitle">Videos</h2>
+          </div>
+          <div class="digital-card-videos" id="cardVideos"></div>
+        </section>
+
+        <section class="digital-card-section digital-card-qr-section" aria-labelledby="qrTitle">
+          <div>
+            <p class="digital-card-overline">SCAN &amp; SHARE</p>
+            <h2 id="qrTitle">Open this card instantly</h2>
+            <p>Scan the QR code from another phone to open this digital card.</p>
+            <a id="qrFallbackLink" href="#">Open card link</a>
+          </div>
+          <div class="digital-card-qr" id="cardQrCode" aria-label="QR code for this digital card"></div>
+        </section>
+      </div>
+
+      <footer class="digital-card-footer">
+        <span>Powered by</span>
+        <a href="/">VASUKI NFC</a>
+      </footer>
+    </article>
+
+    <aside class="digital-card-studio" id="previewStudio" hidden aria-labelledby="studioTitle">
+      <div class="digital-card-studio-heading">
+        <div>
+          <p class="digital-card-overline">LIVE PREVIEW</p>
+          <h2 id="studioTitle">Card studio</h2>
+        </div>
+        <a id="exitPreviewLink" href="#">Done</a>
+      </div>
+
+      <fieldset class="digital-card-theme-picker">
+        <legend>Theme engine</legend>
+        <div id="themePicker"></div>
+      </fieldset>
+
+      <fieldset class="digital-card-template-picker">
+        <legend>Premium templates</legend>
+        <div id="templatePicker"></div>
+      </fieldset>
+
+      <form class="digital-card-preview-form" id="previewForm">
+        <label>
+          Name
+          <input name="name" maxlength="60" autocomplete="name">
+        </label>
+        <label>
+          Professional title
+          <input name="title" maxlength="80">
+        </label>
+        <label>
+          Company
+          <input name="company" maxlength="80" autocomplete="organization">
+        </label>
+        <label>
+          Tagline
+          <input name="tagline" maxlength="100">
+        </label>
+        <button type="reset">Reset preview</button>
+      </form>
+      <p class="digital-card-studio-note">
+        Preview changes stay in this browser and are not published.
+      </p>
+    </aside>
+  </main>
+
+  <div class="digital-card-toast" id="cardToast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+  <script type="module" src="/assets/digital-card.js"></script>
+</body>
+</html>
