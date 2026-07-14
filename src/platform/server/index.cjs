@@ -49,6 +49,10 @@ function createPlatformFoundation(environment = process.env) {
         ...config.rateLimits.orderLookup,
         scope: 'order-lookup',
       }),
+      reviewSubmission: createRateLimiter({
+        ...config.rateLimits.reviewSubmission,
+        scope: 'review-submission',
+      }),
     }),
   });
 }

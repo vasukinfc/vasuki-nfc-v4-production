@@ -31,6 +31,10 @@ const {
   mountCustomerAnalyticsModule,
 } = require('./src/analytics/server/index.cjs');
 const {
+  createPublicReviewRouter,
+  createSupabaseReviewRepository,
+} = require('./src/reviews/server/review-routes.cjs');
+const {
   createPlatformFoundation,
   installFinalErrorHandling,
   installPlatformMiddleware,
@@ -187,6 +191,10 @@ app.use(
   '/api/orders',
   platformFoundation.rateLimiters.orderLookup,
 );
+app.use('/api', createPublicReviewRouter({
+  repository: createSupabaseReviewRepository({ environment: process.env }),
+  rateLimit: platformFoundation.rateLimiters.reviewSubmission,
+}));
 const notificationFoundation = createNotificationFoundation({
   environment: process.env,
   getDatabase: () => db,

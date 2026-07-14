@@ -121,13 +121,34 @@ Required manual action:
 
 ### RB-009: Legacy Supabase anon key review
 
-Status: Manual security-governance review required
+Status: Application hardening complete; manual Supabase RLS/policy verification still required
 
 `public/index.html` contains a legacy `SUPABASE_KEY` value used by homepage review code. The key decodes as a Supabase `anon` role JWT, not a privileged `service_role` key. Supabase anon keys are designed to be browser-visible only when Row Level Security policies are correctly configured, but this repository contains no Supabase migrations, policy files, or RLS evidence for the `reviews` table.
 
 Required manual action:
 
 - Verify Supabase Row Level Security for the `reviews` table before production launch, or rotate/remove the key in a separate approved cleanup if the legacy review integration is no longer required.
+
+Additional confirmed hardening needs:
+
+- Homepage review reads now use explicit fields only: `name`, `text`, `rating`, and `created_at`.
+- Homepage review submission now uses the V4 backend endpoint `POST /api/reviews`.
+- Direct browser-side Supabase insert has been removed.
+- No frontend update/delete operations were found.
+- The frontend escapes rendered `name` and `text`, reducing stored-XSS risk.
+- Frontend and backend validation enforce name length `2..80`, review text length `10..1000`, and integer rating range `1..5`.
+- Backend validation rejects unknown and privileged/moderation fields.
+- Anonymous review submission now has app-side rate limiting: 5 submissions per 10 minutes per IP by default.
+
+Minimum safe policy before production:
+
+- RLS enabled on `public.reviews`.
+- Anonymous `SELECT` restricted to approved reviews and safe public columns.
+- Anonymous `INSERT` restricted to `name`, `rating`, and `text` only.
+- Anonymous `UPDATE` denied.
+- Anonymous `DELETE` denied.
+- Database checks enforce rating and text/name length limits.
+- Moderation fields must be server/default-owned, not client-writable.
 
 ### RB-010: Local JSON fallback data not fully ignored
 
@@ -155,7 +176,7 @@ These must be completed before final production launch:
 5. Configure and verify production email/WhatsApp delivery credentials if external notifications are required at launch.
 6. Ensure production media storage is persistent for deployed Profile Editor/Public Card media before enabling media-dependent features.
 7. Review and approve commit/push of recovery branch `recovery/v4-production-sync`.
-8. Review legacy Supabase `SUPABASE_KEY` exposure and confirm RLS/rotation posture.
+8. Execute and verify Supabase `reviews` RLS/policies manually; application-side review hardening is complete.
 9. Confirm Render should deploy from the approved recovery branch only after it is pushed.
 
 ## Pre-commit cleanup status
@@ -206,3 +227,24 @@ Remaining production dependency:
 - QA upload files: absent
 - QA MongoDB user/order records from this phase: removed
 - Remaining QA marker records in MongoDB: 0
+
+## Review security hardening verification
+
+Status: Application-side hardening complete; manual Supabase RLS action remains production-dependent.
+
+Verified:
+
+- Manual SQL plan file `SUPABASE_REVIEWS_RLS.sql` exists and has not been executed by Codex.
+- Homepage review reads use explicit fields only.
+- Homepage review submissions use `POST /api/reviews`.
+- Direct browser-side Supabase insert was removed.
+- Frontend and backend validation are aligned.
+- Backend rejects unknown and privileged review fields.
+- Review submission rate limit is scoped to `POST /api/reviews` only.
+- Focused review tests passed 10/10.
+- Existing focused regression tests passed 14/14.
+- Syntax, diff, and secret-value scans passed for the review hardening checkpoint.
+
+Remaining manual action:
+
+- Execute/verify Supabase RLS policies manually before production launch.

@@ -4,8 +4,8 @@ Date: 2026-07-13
 
 ## Summary
 
-- Total final checkpoint checks: 160
-- Passed: 150
+- Total final checkpoint checks: 184
+- Passed: 174
 - Failed: 0
 - Blocked / production-dependent: 10
 - Active Admin CRM release blockers: 0
@@ -251,6 +251,50 @@ Classification:
 - Safe removal status: not safe to remove without approval because the homepage review feature still uses it.
 - Recommended action: verify Supabase RLS for the `reviews` table, or approve a separate cleanup/migration to remove Supabase and replace reviews with a V4-owned API.
 
+## Supabase Reviews RLS verification checkpoint
+
+Status: read-only local evidence review complete. No Supabase dashboard/API connection was made and no Supabase data, policies, keys, tables, or configuration were modified.
+
+Findings:
+
+- Supabase project host in reports: `utzq***.supabase.co`.
+- Key type: Supabase `anon` JWT, not a `service_role` key.
+- Table: `reviews`.
+- Frontend reads:
+  - Historical finding before hardening: homepage review loading used a wildcard reviews select, ordered by `created_at`.
+  - `select('rating')` from `reviews`.
+- Frontend writes:
+  - `insert([{ name, rating, text }])`.
+- Frontend update/delete usage: none found.
+- Fields rendered from reads: `name`, `text`, `rating`, `created_at`.
+- Fields written by frontend: `name`, `rating`, `text`.
+- Local RLS evidence: none found in migrations, SQL, policy files, or docs.
+
+Security assessment:
+
+- Anonymous inserts are possible if Supabase policy permits them.
+- Anonymous updates/deletes cannot be confirmed denied from local files and must be checked in Supabase.
+- Resolved in application code: homepage review loading now requests only explicit public fields.
+- The UI uses rating radio values, but JavaScript does not enforce integer range `1..5` before insert.
+- Name and review text have no explicit max length in the form or JavaScript.
+- Resolved in application code: review submissions now use the V4 backend endpoint with a scoped rate limiter.
+- Rendered `name` and `text` are escaped before `innerHTML`, reducing stored-XSS risk.
+
+Classification:
+
+- `NEEDS RLS/POLICY HARDENING`
+- `APPLICATION HARDENING COMPLETED; MANUAL RLS/POLICY HARDENING STILL REQUIRED`
+
+Manual dashboard verification required:
+
+- Confirm RLS is enabled on `public.reviews`.
+- Confirm anonymous `SELECT` exposes only approved reviews and safe public fields.
+- Confirm anonymous `INSERT` is limited to `name`, `rating`, and `text`.
+- Confirm anonymous `UPDATE` is denied.
+- Confirm anonymous `DELETE` is denied.
+- Confirm database constraints enforce rating range and length limits.
+- Confirm anonymous users cannot write approval, moderation, admin, featured, reply, timestamp, or ownership fields.
+
 Validation after this review:
 
 - Syntax sweep passed for 115 JavaScript/CommonJS files.
@@ -374,3 +418,39 @@ No QA wrapper scripts, local JSON QA records, QA uploads, or QA email capture fi
 8. Local fallback `data/*.json` runtime files are not currently ignored and need an approved `.gitignore` update before repository initialization/commit.
 9. Supabase RLS/policy status for the homepage `reviews` table is not verifiable from this repository.
 10. The legacy Supabase review integration should not be removed without approval because it is still used by the homepage review feature.
+
+## Reviews Security Hardening Final Verification
+
+Status: Application-side review hardening complete; Supabase RLS execution remains manual and production-dependent.
+
+Verified changes:
+
+- `SUPABASE_REVIEWS_RLS.sql` exists as a manual SQL plan file and was not executed by Codex.
+- Homepage review loading now selects explicit public fields only: `name`, `text`, `rating`, and `created_at`.
+- Homepage review submission now posts to `POST /api/reviews`.
+- Direct browser-side Supabase insert for review submission was removed.
+- Frontend validation trims and validates `name` length `2..80`, review text length `10..1000`, and integer rating `1..5`.
+- XSS-safe rendering remains intact through escaped `review.name` and `review.text` before HTML insertion.
+- Backend `POST /api/reviews` accepts only `name`, `text`, and `rating`.
+- Backend validation rejects invalid lengths, invalid/non-integer ratings, unknown fields, and privileged/moderation fields such as `approved`, `featured`, `admin_reply`, `created_at`, and `updated_at`.
+- Review submission rate limiting is configured as `5` submissions per `10` minutes per client IP by default through `REVIEW_SUBMISSION_RATE_LIMIT`.
+- The limiter applies only to `POST /api/reviews`; unrelated API routes and review read behavior are not affected.
+
+Verification run:
+
+- `npm ci --dry-run --ignore-scripts`: passed.
+- Full JS/CJS syntax sweep: passed for 117 files.
+- Homepage inline JavaScript syntax parse: passed for 7 inline JavaScript blocks.
+- Review focused tests: passed 10/10.
+- Existing focused regression tests: passed 14/14.
+- Total automated tests in this checkpoint: passed 24/24, failed 0.
+- `git diff --check`: passed.
+- High-confidence secret value scan: no real Razorpay Live key, real MongoDB credential, SMTP/Brevo secret value, private key, or admin-session secret value found in review hardening changes. A broad scan still identifies placeholder/example variable patterns in documentation/config examples; no secret values were printed.
+- Git status confirmed no `data/`, order JSON, user JSON, uploads, payment records, or database records were changed.
+
+Manual production action still required:
+
+- Execute and verify the Supabase reviews RLS/policy plan manually in Supabase Dashboard or SQL editor before production launch.
+- Confirm anonymous `SELECT` returns only approved/published reviews and safe public columns.
+- Confirm anonymous `INSERT` cannot write moderation/admin/timestamp/ownership fields.
+- Confirm anonymous `UPDATE` and `DELETE` are denied.

@@ -88,6 +88,15 @@ function getApplicationConfig(environment = process.env) {
           200,
         ),
       }),
+      reviewSubmission: Object.freeze({
+        windowMs: 10 * 60 * 1000,
+        maximum: boundedInteger(
+          environment.REVIEW_SUBMISSION_RATE_LIMIT,
+          5,
+          3,
+          100,
+        ),
+      }),
     }),
     featureFlags: Object.freeze({
       adminCrm: explicitBoolean(environment.ADMIN_CRM_ENABLED),
