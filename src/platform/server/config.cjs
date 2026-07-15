@@ -93,7 +93,7 @@ function getApplicationConfig(environment = process.env) {
         maximum: boundedInteger(
           environment.REVIEW_SUBMISSION_RATE_LIMIT,
           5,
-          3,
+          1,
           100,
         ),
       }),

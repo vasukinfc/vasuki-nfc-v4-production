@@ -20,6 +20,8 @@ services:
         value: info
       - key: STATIC_ASSET_MAX_AGE_SECONDS
         value: "86400"
+      - key: REVIEW_SUBMISSION_RATE_LIMIT
+        value: "5"
       - key: ADMIN_EMAIL
         value: vasukinfc@gmail.com
       - key: PUBLIC_BASE_URL
@@ -69,4 +71,8 @@ services:
       - key: SMTP_PASS
         sync: false
       - key: SMTP_FROM
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
         sync: false

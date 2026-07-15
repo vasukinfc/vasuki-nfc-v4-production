@@ -138,6 +138,7 @@ test('privileged moderation fields are rejected', async () => {
     assert.equal(body.code, 'REVIEW_FIELDS_INVALID');
   });
 });
+
 test('normal review submissions are allowed within the limit', async () => {
   let storedCount = 0;
   const rateLimit = createRateLimiter({

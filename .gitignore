@@ -10,6 +10,7 @@ orders.json
 users.json
 uploads/
 data/uploads/
+data/*.json
 
 # Logs and temporary files
 *.log
@@ -19,6 +20,3 @@ data/uploads/
 # Operating-system files
 .DS_Store
 Thumbs.db
-
-# Local development fallback data
-data/*.json

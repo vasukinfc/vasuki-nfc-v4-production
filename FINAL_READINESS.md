@@ -4,9 +4,9 @@ Date: 2026-07-13
 
 ## Production readiness score
 
-Updated readiness: 99%
+Updated readiness: 97%
 
-The MongoDB-backed Admin CRM is authenticated and QA-verified locally from the earlier production setup checkpoint. Razorpay Test Mode backend verification now passes against a real successful payment/order in `vasukinfc_v4.orders`, authenticated manual browser QA confirms the Customer Dashboard, Admin Order Management, safe fulfillment update, payment-field immutability, public tracking status, and refresh persistence, Admin Order Details now masks sensitive payment/order/tracking identifiers by default, the Render project configuration has been aligned for V4 staging deployment, and the recovery branch has been pushed. Readiness is 99% because review application hardening is complete and Supabase Reviews RLS/policies have been manually verified. Remaining production dependencies are deployment/payment-provider/media/notification checks: actual Render dashboard values remain manual, Razorpay Live Mode remains intentionally disabled/unverified, external notification provider delivery remains production-dependent, and persistent production media storage remains unresolved.
+The MongoDB-backed Admin CRM is authenticated and QA-verified locally from the earlier production setup checkpoint. Razorpay Test Mode backend verification now passes against a real successful payment/order in `vasukinfc_v4.orders`, authenticated manual browser QA confirms the Customer Dashboard, Admin Order Management, safe fulfillment update, payment-field immutability, public tracking status, and refresh persistence, Admin Order Details now masks sensitive payment/order/tracking identifiers by default, the Render project configuration has been aligned for V4 staging deployment, and the recovery branch has been pushed. Readiness is 97% because actual Render dashboard values remain manual, Razorpay Live Mode remains intentionally disabled/unverified, external notification provider delivery remains production-dependent, persistent production media storage remains unresolved, and the legacy Supabase homepage review integration now requires both RLS/policy verification and application hardening.
 
 ## Phase 1 production setup result
 
@@ -63,7 +63,7 @@ Passed:
 - Brevo/API and SMTP variable names are documented without secret values.
 - Razorpay examples default to Test Mode placeholders; Live Mode requires explicit `rzp_live_` configuration.
 - Media storage production guard remains active: Profile Editor media features require durable storage.
-- Project-file secret scan excluding `.env` found no Razorpay, MongoDB, Brevo, private-key, or admin-session secret values. The Supabase anon-key-shaped value in `public/index.html` is now backed by manually verified Reviews RLS/policies.
+- Project-file secret scan excluding `.env` found no Razorpay, MongoDB, Brevo, private-key, or admin-session secret values. It did identify a legacy Supabase anon-key-shaped value in `public/index.html`, which requires manual Supabase RLS/rotation review.
 
 Fixed:
 
@@ -175,7 +175,7 @@ Post-deployment smoke checklist for the Render staging URL:
 
 Additional manual review:
 
-- `public/index.html` contains a Supabase anon key for homepage reviews; Supabase Reviews RLS/policies have now been manually verified successfully.
+- `public/index.html` contains a legacy `SUPABASE_KEY` for homepage reviews. Confirm Supabase Row Level Security/rotation posture before production launch, or approve a separate cleanup if the review integration is no longer required.
 
 ## Git repository recovery review
 
@@ -203,7 +203,7 @@ Pre-commit inventory:
 - `.env.*`, `node_modules/`, `uploads/`, `data/uploads/`, `orders.json`, `users.json`, logs, and temp files are ignored.
 - `uploads/` is empty.
 - `data/` contains local fallback JSON files and should be treated as runtime/dev data.
-- `data/*.json` is not currently ignored and should be added to `.gitignore` before repository initialization or commit.
+- `data/*.json` is now ignored in `.gitignore` and should remain excluded before repository initialization or commit.
 
 ## Legacy Supabase security review
 
@@ -234,8 +234,8 @@ Recommended production action:
 
 Classification:
 
-- `RLS/POLICY HARDENING MANUALLY VERIFIED`
-- `APPLICATION HARDENING COMPLETED; RLS/POLICY VERIFICATION PASSED`
+- `NEEDS RLS/POLICY HARDENING`
+- `NEEDS APPLICATION HARDENING`
 
 Local evidence:
 
@@ -243,19 +243,19 @@ Local evidence:
 - The embedded key decodes as Supabase `anon`, not `service_role`.
 - The table used by the homepage is `reviews`.
 - The frontend performs:
-  - Historical finding before hardening: homepage review loading used a wildcard reviews select, ordered by `created_at`.
-  - Historical finding before hardening: homepage review submission inserted directly into Supabase.
+  - `select('*')` from `reviews`, ordered by `created_at`.
+  - `insert([{ name, rating, text }])` into `reviews`.
   - `select('rating')` from `reviews` for rating statistics.
 - No frontend `update` or `delete` operation was found.
 - No local Supabase migrations, SQL policy files, grants, or RLS evidence were found.
 
 Application hardening gaps:
 
-- Resolved in application code: frontend and backend validate integer rating range `1..5`.
-- Resolved in application code: frontend and backend enforce name/review length limits.
+- Rating is only constrained by radio buttons in the UI; the submitted value is not revalidated to enforce integer range `1..5`.
+- Name and review text have no explicit maximum length in HTML or JavaScript.
 - There is no moderation/approval field handling in the frontend.
-- Resolved in application code: `POST /api/reviews` has a scoped review-submission rate limiter.
-- The renderer escapes `name` and `text`, and review loading now uses explicit public fields; Supabase RLS must still enforce approved-only access in production.
+- There is no anti-spam/rate-limit layer for anonymous review submission.
+- The renderer escapes `name` and `text`, which lowers stored-XSS risk, but `select('*')` exposes all table columns to the browser if RLS/column permissions allow them.
 
 Minimum safe production policy:
 
@@ -264,7 +264,7 @@ Minimum safe production policy:
 - Allow anonymous `INSERT` only for `name`, `rating`, and `text`; force moderation fields such as `approved`, `created_at`, `is_admin`, `featured`, or `reply` to defaults/server-owned values.
 - Deny anonymous `UPDATE` and `DELETE`.
 - Enforce database checks for rating range and length limits.
-- Application-side submission is now behind the V4 backend endpoint with validation and rate limiting; database-side moderation/RLS must still be verified before public launch.
+- Prefer moving review submission behind a V4 backend endpoint with validation, rate limiting, and moderation before public launch.
 
 ## Safe Git recovery branch preparation
 
@@ -388,64 +388,50 @@ No destructive action was taken:
 4. Run live payment verification end-to-end in the intended production environment.
 5. Verify external notification delivery providers.
 6. Confirm persistent production media storage before enabling media-dependent production features.
-7. Review and approve committing/pushing this report-only Supabase verification update.
-8. Create/review/merge the approved recovery branch through the normal GitHub flow before Render deployment.
-9. Configure Render to deploy only from the approved merged branch after deployment approval.
+7. Review and approve commit/push of `recovery/v4-production-sync`.
+8. Review legacy Supabase `SUPABASE_KEY` exposure and confirm Supabase RLS/rotation posture.
+9. Configure Render to deploy only from the approved pushed recovery branch.
 
 ## Final note
 
 `ADMIN_BOOTSTRAP_PASSWORD` has been intentionally removed after first administrator creation and should not be restored unless a future controlled bootstrap workflow explicitly requires it.
 
-## Reviews Security Hardening Final Verification
+## 2026-07-15 Current-source continuation checkpoint
 
-Status: Application-side review hardening complete; Supabase RLS/policy verification passed manually.
+Official source of truth is now `C:\vasuki-nfc-website-main`.
 
-Verified changes:
+Updated readiness: 98%
 
-- `SUPABASE_REVIEWS_RLS.sql` exists as a manual SQL plan file and was not executed by Codex.
-- Homepage review loading now selects explicit public fields only: `name`, `text`, `rating`, and `created_at`.
-- Homepage review submission now posts to `POST /api/reviews`.
-- Direct browser-side Supabase insert for review submission was removed.
-- Frontend validation trims and validates `name` length `2..80`, review text length `10..1000`, and integer rating `1..5`.
-- XSS-safe rendering remains intact through escaped `review.name` and `review.text` before HTML insertion.
-- Backend `POST /api/reviews` accepts only `name`, `text`, and `rating`.
-- Backend validation rejects invalid lengths, invalid/non-integer ratings, unknown fields, and privileged/moderation fields such as `approved`, `featured`, `admin_reply`, `created_at`, and `updated_at`.
-- Review submission rate limiting is configured as `5` submissions per `10` minutes per client IP by default through `REVIEW_SUBMISSION_RATE_LIMIT`.
-- The limiter applies only to `POST /api/reviews`; unrelated API routes and review read behavior are not affected.
+Completed in the current project:
 
-Verification run:
+- Hardened homepage review submission without changing the premium V4 UI.
+- Added `POST /api/reviews` through the existing Express/platform middleware.
+- Review endpoint accepts only `name`, `text`, and `rating`.
+- Server-side validation trims input and enforces:
+  - name length `2..80`
+  - review text length `10..1000`
+  - integer rating `1..5`
+  - rejection of unknown or privileged/moderation fields
+- Added scoped review submission rate limit: default `5` requests per `10` minutes per IP.
+- Homepage review loading now uses explicit public fields: `name,text,rating,created_at`.
+- Removed direct browser-side Supabase insert from the homepage.
+- Preserved XSS-safe escaping for rendered review `name` and `text`.
+- Added Render/env documentation for `REVIEW_SUBMISSION_RATE_LIMIT`, `SUPABASE_URL`, and `SUPABASE_ANON_KEY`.
+- Added `data/*.json` to `.gitignore` so local fallback/runtime JSON data remains excluded.
 
-- `npm ci --dry-run --ignore-scripts`: passed.
-- Full JS/CJS syntax sweep: passed for 117 files.
-- Homepage inline JavaScript syntax parse: passed for 7 inline JavaScript blocks.
-- Review focused tests: passed 10/10.
-- Existing focused regression tests: passed 14/14.
-- Total automated tests in this checkpoint: passed 24/24, failed 0.
-- `git diff --check`: passed.
-- High-confidence secret value scan: no real Razorpay Live key, real MongoDB credential, SMTP/Brevo secret value, private key, or admin-session secret value found in review hardening changes. A broad scan still identifies placeholder/example variable patterns in documentation/config examples; no secret values were printed.
-- Git status confirmed no `data/`, order JSON, user JSON, uploads, payment records, or database records were changed.
+Validation:
 
-Manual production action still required:
+- Review focused tests passed: `10/10`.
+- Existing focused regression tests passed: `14/14`.
+- Total focused tests passed in this checkpoint: `24/24`.
+- JS/CJS syntax sweep passed for `116` files.
+- Secret scan found no committed live Razorpay key, real MongoDB credential, Brevo/SMTP secret, private key, or admin-session secret. The remaining hits are expected placeholder examples/prefix-detection code.
 
-- Supabase reviews RLS/policy plan has been manually executed and verified successfully.
-- Confirmed: anonymous `SELECT` returns only approved/published reviews and safe public columns.
-- Confirmed: anonymous `INSERT` is pending-only with validation and cannot write privileged fields under the verified policy/grant posture.
-- Confirmed: anonymous `UPDATE` and `DELETE` are denied.
-## Supabase Reviews RLS Manual Verification
+Remaining production dependencies:
 
-Status: Passed by manual Supabase verification. No Supabase SQL was executed by Codex.
-
-Verified manually by project owner:
-
-- `approved` column exists with default `false`.
-- Only two anonymous policies exist for the `reviews` table.
-- Anonymous `SELECT` is approved-only.
-- Anonymous `INSERT` is pending-only and includes validation.
-- Anonymous `UPDATE` and `DELETE` are denied.
-- Database constraints are active.
-
-Result:
-
-- Supabase Reviews RLS/policy verification is no longer a release blocker.
-- Application-side review hardening remains complete.
-- The Supabase anon key remains acceptable for this public review use case only with the verified RLS posture above.
+1. Local `.git` metadata in this workspace is still invalid; deployment should use the confirmed GitHub repository or the Git metadata must be repaired separately before committing from this folder.
+2. Render dashboard must be checked/updated with `SUPABASE_URL` and `SUPABASE_ANON_KEY` for review submission.
+3. Supabase Reviews RLS must remain verified for the same project/table before production review writes are enabled.
+4. Render dashboard values for all `sync: false` variables still require manual verification.
+5. Razorpay Live Mode remains intentionally disabled/unverified until final approved payment launch.
+6. Persistent production media storage remains required before relying on uploaded media in production.
